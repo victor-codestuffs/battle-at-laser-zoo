@@ -26,6 +26,7 @@ function preload() {
   game.load.audio('hurt2', 'assets/audio/hurt-2.wav');
   game.load.audio('explosion1', 'assets/audio/explosion-1.wav');
   game.load.audio('explosion2', 'assets/audio/explosion-2.wav');
+  game.load.audio('letthemfight', 'assets/audio/letthemfight.mp3');
 }
 
 var hero1, hero2;
@@ -46,7 +47,8 @@ function create() {
   hurtfx1 = game.add.audio('hurt1');
   hurtfx2 = game.add.audio('hurt2');
   explosionfx1 = game.add.audio('explosion1');
-  explosionfx1 = game.add.audio('explosion2');
+  explosionfx2 = game.add.audio('explosion2');
+  letthemfightfx = game.add.audio('letthemfight');
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -113,6 +115,7 @@ function update() {
 
 function _showIntro () {
   openText = game.add.text(game.world.centerX,game.world.centerY, "Let them fight!", { font: '72px Roboto', fill: 'cyan', align: 'center' });
+  letthemfightfx.play();
   openText.anchor.setTo(0.5, 0.5);
   game.input.onDown.add(_removeIntro, this);
 }
@@ -325,7 +328,7 @@ function Hero(type, key) {
           //  Grab the first bullet we can from the pool
           bullet = sprite.ultimate.getFirstExists(false);
           if (bullet && sprite.special >= SPECIAL_LIMIT) {
-            explosionfx1.play();
+            explosionfx2.play();
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
             bullet.lifespan = 1500;
             bullet.angle = sprite.angle;
