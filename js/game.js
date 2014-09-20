@@ -14,11 +14,16 @@ WebFontConfig = {
 function preload() {
   game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
   game.load.image('arena', 'assets/arena.png');
-  game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.image('chicken', 'assets/chicken.png');
+  game.load.image('fireball', 'assets/fireball.png');
+  game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.spritesheet('bear_bullets', 'assets/sprite_bearrage_chomp.png', 60, 25);
   game.load.spritesheet('bear_ulti', 'assets/sprite_bearrage_ulti.png', 120, 92);
-  game.load.image('fireball', 'assets/fireball.png');
+  game.load.spritesheet('topcat', 'assets/sprite_topcat.png', 100, 100);
+  game.load.spritesheet('topcat_bullets', 'assets/sprite_topcat_chomp.png', 30, 54);
+  // REIMERS, add sprite dimensions below
+  // game.load.spritesheet('topcat_ulti', 'assets/sprite_topcat_ulti.png', width, height);
+  // then find topcat's line 331 sprite.ultimate = _createBullets('bear_ulti'); and change bear to topcat
   game.load.image('creep', 'assets/creep.png');
   game.load.audio('laser1', 'assets/audio/laser-1.wav');
   game.load.audio('laser2', 'assets/audio/laser-2.wav');
@@ -72,7 +77,7 @@ function create() {
 
   // Make dem heroes
   hero1 = new Hero('bear', key1);
-  hero2 = new Hero('chicken', key2);
+  hero2 = new Hero('topcat', key2);
 
   // add creeps
   creeps = game.add.group();
@@ -300,6 +305,82 @@ function Hero(type, key) {
       }
       break;
     // END BEAR
+    // START TOPCAT
+    case 'topcat':
+      sprite = game.add.sprite(650, 650, 'topcat');
+      sprite.special = 0;
+      sprite.anchor.setTo(0.5, 0.5);
+      sprite.scale.setTo(0.75, 0.75);
+      sprite.rotation = 135;
+      sprite.animations.add('topcat_run', [1, 2, 3, 4, 5, 6, 7], 8, true);
+      sprite.animations.add('topcat_chomp', [9, 10, 11, 12, 13, 14, 15], 2, true);
+      sprite.animations.add('topcat_idle', [0], 10, true);
+      sprite.bullets = _createBullets('topcat_bullets');
+      sprite.chomp = function () {
+        if (game.time.now > bulletTime) {
+          laserfx1.play();
+          //  Grab the first bullet we can from the pool
+          bullet = sprite.bullets.getFirstExists(false);
+          if (bullet) {
+            bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
+            bullet.lifespan = 500;
+            bullet.angle = sprite.angle;
+            bullet.player = 2;
+            game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 500, bullet.body.velocity);
+            bulletTime = game.time.now + 50;
+          }
+        }
+      };
+      sprite.ultimate = _createBullets('bear_ulti');
+      sprite.ulti = function () {
+        if (game.time.now > bulletTime) {
+          //  Grab the first bullet we can from the pool
+          bullet = sprite.ultimate.getFirstExists(false);
+          if (bullet && sprite.special >= SPECIAL_LIMIT) {
+            explosionfx1.play();
+            bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
+            bullet.lifespan = 1500;
+            bullet.angle = sprite.angle;
+            bullet.player = 2;
+            game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 500, bullet.body.velocity);
+            bulletTime = game.time.now + 50;
+            sprite.special = 0;
+            $('.p2').removeClass('glow').find('.barFill').css('height', 0);
+          }
+        }
+      };
+      sprite.update = function () {
+        sprite.body.velocity.x = 0;
+        sprite.body.velocity.y = 0;
+        sprite.body.angularVelocity = 0;
+
+        if (key.left.isDown) {
+          sprite.body.angularVelocity = -200;
+        } else if (key.right.isDown) {
+          sprite.body.angularVelocity = 200;
+        }
+
+        if (key.up.isDown) {
+          sprite.animations.play('topcat_run');
+          game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 300, sprite.body.velocity);
+        } else if (key.down.isDown) {
+          sprite.animations.play('topcat_run');
+          game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, -200, sprite.body.velocity);
+        }
+
+        if (key.basic.isDown) {
+          sprite.animations.play('topcat_chomp');
+        }
+
+        // fast chomp
+        // if (key.basic.isDown) { sprite.chomp(); }
+        // slow chomp
+        key.basic.onDown.add(sprite.chomp, this);
+        key.special.onDown.add(sprite.ulti, this);
+
+      }
+      break;
+    // END TOPCAT
     // START DEFAULT (CHICKEN)
     default:
       sprite = game.add.sprite(550, 550, 'chicken');
