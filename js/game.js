@@ -4,7 +4,7 @@ function preload() {
   game.load.image('arena', 'assets/arena.png');
   game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.image('chicken', 'assets/chicken.png');
-  game.load.image('bear_chomp', 'assets/sprite_bearrage_chomp.png');
+  game.load.spritesheet('bear_chomp', 'assets/sprite_bearrage_chomp.png', 60, 25);
   game.load.image('creep', 'assets/creep.png');
 }
 
