@@ -2,6 +2,7 @@ var game = new Phaser.Game(800, 800, Phaser.AUTO, 'phaser-stage', { preload: pre
 
 function preload() {
   game.load.image('chicken', 'assets/chicken.png');
+  game.load.image('creep', 'assets/creep.png');
 }
 
 var animal;
@@ -22,6 +23,25 @@ function create() {
 
   key.space.onDown.add(chomp, this);
 
+
+  // add creeps
+  creeps = game.add.group();
+
+  for (var i = 0; i < 30; i++)
+  {
+    var s = creeps.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'creep');
+    s.animations.add('spin', [0,1,2,3]);
+    s.play('spin', 20, true);
+    game.physics.enable(s, Phaser.Physics.ARCADE);
+    s.body.velocity.x = game.rnd.integerInRange(-200, 200);
+    s.body.velocity.y = game.rnd.integerInRange(-200, 200);
+  }
+
+  creeps.setAll('body.collideWorldBounds', true);
+  creeps.setAll('body.bounce.x', 1);
+  creeps.setAll('body.bounce.y', 1);
+  creeps.setAll('body.minBounceVelocity', 0);
+
 }
 
 function update() {
@@ -38,6 +58,7 @@ function update() {
     animal.x++;
   }
 
+  game.physics.arcade.collide(creeps);
 }
 
 // basic attack
