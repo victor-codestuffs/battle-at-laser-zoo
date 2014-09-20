@@ -1,7 +1,7 @@
 var game = new Phaser.Game(600, 600, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update });
 
 function preload() {
-  game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100, 8);
+  game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.image('chicken', 'assets/chicken.png');
   game.load.image('fireball', 'assets/fireball.png');
   game.load.image('creep', 'assets/creep.png');
@@ -27,9 +27,9 @@ function create() {
   animal = game.add.sprite(50, 50, 'bear');
   animal.anchor.setTo(0.5, 0.5);
   animal.scale.setTo(0.75, 0.75);
-  animal.rotation = 45;
-  animal.animations.add('bear_run');
-  animal.animations.play('bear_run', 10, true);
+  animal.angle = 45;
+  animal.animations.add('bear_run', [1, 2, 3, 4, 5, 6, 7], 10, true);
+  animal.animations.add('bear_idle', [0], 10, true);
 
   animal2 = game.add.sprite(550, 550, 'chicken');
   animal2.anchor.setTo(0.5, 0.5);
@@ -100,9 +100,13 @@ function update() {
   }
 
   if (key.up.isDown) {
+    animal.animations.play('bear_run');
     game.physics.arcade.velocityFromAngle(animal.angle, 300, animal.body.velocity);
   } else if (key.down.isDown) {
+    animal.animations.play('bear_run');
     game.physics.arcade.velocityFromAngle(animal.angle, -200, animal.body.velocity);
+  } else {
+    animal.animations.play('bear_idle');
   }
 
   // animal 2
