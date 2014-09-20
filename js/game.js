@@ -4,7 +4,8 @@ function preload() {
   game.load.image('arena', 'assets/arena.png');
   game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.image('chicken', 'assets/chicken.png');
-  game.load.spritesheet('bear_chomp', 'assets/sprite_bearrage_chomp.png', 60, 25);
+  game.load.spritesheet('bear_bullets', 'assets/sprite_bearrage_chomp.png', 60, 25);
+  game.load.image('fireball', 'assets/fireball.png');
   game.load.image('creep', 'assets/creep.png');
 }
 
@@ -41,15 +42,6 @@ function create() {
   hero1 = new Hero('bear', key1);
   hero2 = new Hero('chicken', key2);
 
-  bullets = game.add.group();
-  bullets.enableBody = true;
-  bullets.physicsBodyType = Phaser.Physics.ARCADE;
-  bullets.createMultiple(10, 'bear_chomp');
-  bullets.setAll('anchor.x', 0.5);
-  bullets.setAll('anchor.y', 1);
-  bullets.setAll('checkWorldBounds', true);
-  bullets.setAll('outOfBoundsKill', true);
-
   // add creeps
   creeps = game.add.group();
   _createCreeps(20);
@@ -63,9 +55,10 @@ function update() {
   game.physics.arcade.collide(hero1, hero2);
   game.physics.arcade.collide(creeps, hero2);
   game.physics.arcade.collide(creeps, hero1);
-  game.physics.arcade.collide(creeps, bullets, _attackCreepCallback, null, this);
-  game.physics.arcade.collide(bullets, hero1);
-  game.physics.arcade.collide(bullets, hero2);
+  game.physics.arcade.collide(creeps, hero1.bullets, _attackCreepCallback, null, this);
+  game.physics.arcade.collide(creeps, hero2.bullets, _attackCreepCallback, null, this);
+  game.physics.arcade.collide(hero2.bullets, hero1);
+  game.physics.arcade.collide(hero1.bullets, hero2);
 }
 
 // creep die collision
@@ -121,6 +114,19 @@ function _rnd(low, high) {
   return game.rnd.integerInRange(low, high);
 }
 
+function _createBullets(img) {
+  var bullets = game.add.group();
+  bullets.enableBody = true;
+  bullets.physicsBodyType = Phaser.Physics.ARCADE;
+  bullets.createMultiple(5, img);
+  bullets.setAll('anchor.x', 0.5);
+  bullets.setAll('anchor.y', 1);
+  bullets.setAll('checkWorldBounds', true);
+  bullets.setAll('outOfBoundsKill', true);
+
+  return bullets;
+}
+
 // HERO MAKER
 function Hero(type, key) {
   var sprite, 
@@ -136,10 +142,11 @@ function Hero(type, key) {
       sprite.animations.add('bear_run', [1, 2, 3, 4, 5, 6, 7], 8, true);
       sprite.animations.add('bear_chomp', [9, 10, 11, 12, 13, 14, 15], 2, true);
       sprite.animations.add('bear_idle', [0], 10, true);
+      sprite.bullets = _createBullets('bear_bullets');
       sprite.chomp = function () {
         if (game.time.now > bulletTime) {
           //  Grab the first bullet we can from the pool
-          bullet = bullets.getFirstExists(false);
+          bullet = sprite.bullets.getFirstExists(false);
           if (bullet) {
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
             bullet.lifespan = 500;
@@ -186,10 +193,11 @@ function Hero(type, key) {
       sprite.special = 0;
       sprite.anchor.setTo(0.5, 0.5);
       sprite.rotation = 180;
+      sprite.bullets = _createBullets('fireball');
       sprite.chomp = function () {
         if (game.time.now > bulletTime) {
           //  Grab the first bullet we can from the pool
-          bullet = bullets.getFirstExists(false);
+          bullet = sprite.bullets.getFirstExists(false);
           if (bullet) {
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
             bullet.lifespan = 150;
