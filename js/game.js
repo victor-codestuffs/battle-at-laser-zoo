@@ -5,6 +5,7 @@ function preload() {
   game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.image('chicken', 'assets/chicken.png');
   game.load.spritesheet('bear_bullets', 'assets/sprite_bearrage_chomp.png', 60, 25);
+  game.load.spritesheet('bear_ulti', 'assets/sprite_bearrage_ulti.png', 120, 92);
   game.load.image('fireball', 'assets/fireball.png');
   game.load.image('creep', 'assets/creep.png');
 }
@@ -63,6 +64,8 @@ function update() {
   game.physics.arcade.collide(creeps, hero2.bullets, _attackCreepCallback, null, this);
   game.physics.arcade.collide(hero2.bullets, hero1);
   game.physics.arcade.collide(hero1.bullets, hero2);
+  game.physics.arcade.collide(hero2.ultimate, hero1);
+  game.physics.arcade.collide(hero1.ultimate, hero2);
 
   // collisions = [
   //   [hero1, hero2],
@@ -176,6 +179,22 @@ function Hero(type, key) {
           }
         }
       };
+      sprite.ultimate = _createBullets('bear_ulti');
+      sprite.ulti = function () {
+        if (game.time.now > bulletTime) {
+          //  Grab the first bullet we can from the pool
+          bullet = sprite.ultimate.getFirstExists(false);
+          if (bullet && sprite.special >= SPECIAL_LIMIT) {
+            bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
+            bullet.lifespan = 1000;
+            bullet.angle = sprite.angle;
+            bullet.player = 1;
+            game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 500, bullet.body.velocity);
+            bulletTime = game.time.now + 50;
+            sprite.special = 0
+          }
+        }
+      };
       sprite.update = function () {
         sprite.body.velocity.x = 0;
         sprite.body.velocity.y = 0;
@@ -203,6 +222,8 @@ function Hero(type, key) {
         // if (key.basic.isDown) { sprite.chomp(); }
         // slow chomp
         key.basic.onDown.add(sprite.chomp, this);
+        key.special.onDown.add(sprite.ulti, this);
+
       }
       break;
     // END BEAR
