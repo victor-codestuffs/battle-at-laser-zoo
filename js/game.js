@@ -24,6 +24,7 @@ var bg;
 var SPECIAL_LIMIT = 3;
 var CREEP_LIMIT = 30;
 var CREEP_REGEN_TIME = 5;
+var winner, stateText;
 
 function create() {
 
@@ -63,6 +64,11 @@ function create() {
   creeps = game.add.group();
   _createCreeps(CREEP_LIMIT);
   game.time.events.repeat(Phaser.Timer.SECOND * CREEP_REGEN_TIME, CREEP_LIMIT, _resurrectCreep, this);
+
+  // text
+  stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
+  stateText.anchor.setTo(0.5, 0.5);
+  stateText.visible = false;
 }
 
 function update() {
@@ -107,11 +113,17 @@ function _heroKillCallback(_heroes, _bullets) {
     hurtfx1.play();
     _bullets.kill();
     hero2.kill();
+    winner = hero1;
   } else {
     hurtfx2.play();
     _bullets.kill();
     hero1.kill();
+    winner = hero2;
   }
+  stateText.text= "You're winner\nClick to restart";
+  stateText.visible = true;
+  //the "click to restart" handler
+  game.input.onTap.addOnce(_restart, this);
 }
 
 // creep die collision
@@ -348,4 +360,23 @@ function _updateBars() {
 // Power bar glow helper
 function _glowMe($el, special) {
   return (special >= SPECIAL_LIMIT) ? $el.addClass('glow') : $el.removeClass('glow');
+}
+
+
+function _restart () {
+
+  //  A new level starts
+  
+  //resets the life count
+  // lives.callAll('revive');
+  //  And brings the aliens back from the dead :)
+  // aliens.removeAll();
+  // createAliens();
+
+  //revives the player
+  hero1.revive();
+  hero2.revive();
+  //hides the text
+  stateText.visible = false;
+
 }
