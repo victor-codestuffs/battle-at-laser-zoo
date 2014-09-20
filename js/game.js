@@ -179,8 +179,12 @@ function fireballCreepCallback (_creeps, _bullets) {
   _bullets.kill();
   if (_bullets.player == 1) {
     p1special += 1;
+    if (p1special >= 10) p1special = 10;
+    updateBars();
   } else {
     p2special += 1;
+    if (p2special >= 10) p2special = 10;
+    updateBars();
   }
 }
 
@@ -200,3 +204,23 @@ function resurrect() {
     creep.body.velocity.y = game.rnd.integerInRange(-100, 100);
   }
 }
+
+function updateBars() {
+  $('.barContainer.p1 .barFill').height(600/10*p1special);
+  $('.barContainer.p2 .barFill').height(600/10*p2special);
+  if (p1special == 10) {
+    $('.barContainer.p1').addClass('glow');
+  } else {
+    $('.barContainer.p1').removeClass('glow');
+  }
+  if (p2special == 10) {
+    $('.barContainer.p2').addClass('glow');
+  } else {
+    $('.barContainer.p2').removeClass('glow');
+  }
+}
+
+$( document ).ready(function() {
+  $('body').append('<div class="barContainer p1"><div class="barFill"></div></div>');
+  $('body').append('<div class="barContainer p2"><div class="barFill p2"></div></div>');
+});
