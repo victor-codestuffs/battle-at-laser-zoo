@@ -8,6 +8,10 @@ function preload() {
   game.load.spritesheet('bear_ulti', 'assets/sprite_bearrage_ulti.png', 120, 92);
   game.load.image('fireball', 'assets/fireball.png');
   game.load.image('creep', 'assets/creep.png');
+  game.load.audio('laser1', 'assets/audio/laser-1.wav');
+  game.load.audio('laser2', 'assets/audio/laser-2.wav');
+  game.load.audio('hurt1', 'assets/audio/hurt-1.wav');
+  game.load.audio('hurt2', 'assets/audio/hurt-2.wav');
 }
 
 var hero1, hero2;
@@ -22,6 +26,10 @@ var CREEP_REGEN_TIME = 5;
 function create() {
 
   bg = game.add.tileSprite(0, 0, 600, 600, 'arena');
+  laserfx1 = game.add.audio('laser1');
+  laserfx2 = game.add.audio('laser2');
+  hurtfx1 = game.add.audio('hurt1');
+  hurtfx2 = game.add.audio('hurt2');
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -62,8 +70,8 @@ function update() {
   game.physics.arcade.collide(creeps, hero1);
   game.physics.arcade.collide(creeps, hero1.bullets, _attackCreepCallback, null, this);
   game.physics.arcade.collide(creeps, hero2.bullets, _attackCreepCallback, null, this);
-  game.physics.arcade.collide(hero2.bullets, hero1);
-  game.physics.arcade.collide(hero1.bullets, hero2);
+  game.physics.arcade.collide(hero2.bullets, hero1, _heroShotCallback, null, this);
+  game.physics.arcade.collide(hero1.bullets, hero2, _heroShotCallback, null, this);
   game.physics.arcade.collide(hero2.ultimate, hero1);
   game.physics.arcade.collide(hero1.ultimate, hero2);
 
@@ -79,6 +87,14 @@ function update() {
   // collisions.forEach(function (arr) {
   //   game.physics.arcade.collide.apply(this, arr);
   // });
+}
+
+function _heroShotCallback(_heroes, _bullets) {
+  if (_bullets.player == 1) {
+    hurtfx1.play();
+  } else {
+    hurtfx2.play();  
+  }
 }
 
 // creep die collision
@@ -167,6 +183,7 @@ function Hero(type, key) {
       sprite.bullets = _createBullets('bear_bullets');
       sprite.chomp = function () {
         if (game.time.now > bulletTime) {
+          laserfx1.play();
           //  Grab the first bullet we can from the pool
           bullet = sprite.bullets.getFirstExists(false);
           if (bullet) {
@@ -236,6 +253,7 @@ function Hero(type, key) {
       sprite.bullets = _createBullets('fireball');
       sprite.chomp = function () {
         if (game.time.now > bulletTime) {
+          laserfx2.play();
           //  Grab the first bullet we can from the pool
           bullet = sprite.bullets.getFirstExists(false);
           if (bullet) {
