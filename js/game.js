@@ -8,7 +8,7 @@ function preload() {
 
 var animal;
 var key = {};
-var bullets;
+var bullets, bulletTime = 0;
 var fireRate = 100;
 var nextFire = 0;
 
@@ -29,6 +29,8 @@ function create() {
   bullets.enableBody = true;
   bullets.physicsBodyType = Phaser.Physics.ARCADE;
   bullets.createMultiple(5, 'fireball');
+  bullets.setAll('anchor.x', 0.5);
+  bullets.setAll('anchor.y', 1);
   bullets.setAll('checkWorldBounds', true);
   bullets.setAll('outOfBoundsKill', true);
 
@@ -88,12 +90,17 @@ function update() {
 
 // basic attack
 function chomp() {
-  if (game.time.now > nextFire && bullets.countDead() > 0) {
-    nextFire = game.time.now + fireRate;
-    var bullet = bullets.getFirstDead();
-    bullet.reset(animal.x - 8, animal.y - 8); 
-    game.physics.arcade.moveToPointer(bullet, 300);
-  }
+   if (game.time.now > bulletTime)
+    {
+        //  Grab the first bullet we can from the pool
+        bullet = bullets.getFirstExists(false);
+        if (bullet)
+        {
+            bullet.reset(animal.x, animal.y);
+            bullet.body.velocity.y = 400;
+            bulletTime = game.time.now + 200;
+        }
+    }
 }
 
 // creep die collision
