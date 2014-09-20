@@ -46,20 +46,20 @@ function create() {
   bullets.setAll('checkWorldBounds', true);
   bullets.setAll('outOfBoundsKill', true);
 
-  key.up = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-  key.down = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-  key.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-  key.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-  key.enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+  key.up = game.input.keyboard.addKey(Phaser.Keyboard.W);
+  key.down = game.input.keyboard.addKey(Phaser.Keyboard.S);
+  key.left = game.input.keyboard.addKey(Phaser.Keyboard.A);
+  key.right = game.input.keyboard.addKey(Phaser.Keyboard.D);
+  key.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-  key2.up = game.input.keyboard.addKey(Phaser.Keyboard.W);
-  key2.down = game.input.keyboard.addKey(Phaser.Keyboard.S);
-  key2.left = game.input.keyboard.addKey(Phaser.Keyboard.A);
-  key2.right = game.input.keyboard.addKey(Phaser.Keyboard.D);
-  key2.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  key2.up = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+  key2.down = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+  key2.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+  key2.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+  key2.enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
   
-  key.enter.onDown.add(chomp, this);
-  key2.space.onDown.add(chomp2, this);
+  key.space.onDown.add(chomp, this);
+  key2.enter.onDown.add(chomp2, this);
 
   // add creeps
   creeps = game.add.group();
