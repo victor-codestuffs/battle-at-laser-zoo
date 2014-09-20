@@ -2,11 +2,15 @@ var game = new Phaser.Game(600, 600, Phaser.AUTO, 'phaser-stage', { preload: pre
 
 function preload() {
   game.load.image('chicken', 'assets/chicken.png');
+  game.load.image('fireball', 'assets/fireball.png');
   game.load.image('creep', 'assets/creep.png');
 }
 
 var animal;
 var key = {};
+var bullets;
+var fireRate = 100;
+var nextFire = 0;
 
 function create() {
 
@@ -20,6 +24,13 @@ function create() {
   game.physics.enable(animal, Phaser.Physics.ARCADE);
 
   animal.body.collideWorldBounds = true;
+
+  bullets = game.add.group();
+  bullets.enableBody = true;
+  bullets.physicsBodyType = Phaser.Physics.ARCADE;
+  bullets.createMultiple(5, 'fireball');
+  bullets.setAll('checkWorldBounds', true);
+  bullets.setAll('outOfBoundsKill', true);
 
   key.up = game.input.keyboard.addKey(Phaser.Keyboard.UP);
   key.down = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -56,21 +67,30 @@ function update() {
   animal.body.velocity.y = 0;
   animal.body.angularVelocity = 0;
 
-  if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+  if (key.left.isDown) {
     animal.body.angularVelocity = -200;
   }
-  else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+  else if (key.right.isDown) {
     animal.body.angularVelocity = 200;
   }
 
-  if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+  if (key.up.isDown) {
     game.physics.arcade.velocityFromAngle(animal.angle, 300, animal.body.velocity);
   }
+
+  // if (key.space.isDown) {
+  //   chomp();
+  // }
 
   game.physics.arcade.collide(creeps);
 }
 
 // basic attack
 function chomp() {
-  console.log('chomp!');
+  if (game.time.now > nextFire && bullets.countDead() > 0) {
+    nextFire = game.time.now + fireRate;
+    var bullet = bullets.getFirstDead();
+    bullet.reset(animal.x - 8, animal.y - 8); 
+    game.physics.arcade.moveToPointer(bullet, 300);
+  }
 }
