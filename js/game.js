@@ -8,13 +8,10 @@ function preload() {
   game.load.image('creep', 'assets/creep.png');
 }
 
-var hero1, hero2
+var hero1, hero2;
 var key1 = {}, key2 = {};
 var creeps, bullets, bulletTime = 0;
 var fireRate = 100, nextFire = 0;
-
-var p1special = 0;
-var p2special = 0;
 
 var bg;
 
@@ -74,14 +71,13 @@ function _attackCreepCallback (_creeps, _bullets) {
   _creeps.kill();
   _bullets.kill();
   if (_bullets.player == 1) {
-    p1special += 1;
-    if (p1special >= 10) p1special = 10;
-    updateBars();
+    hero1.special += 1;
+    if (hero1.special >= 10) hero1.special = 10;
   } else {
-    p2special += 1;
-    if (p2special >= 10) p2special = 10;
-    updateBars();
+    hero2.special += 1;
+    if (hero2.special >= 10) hero2.special = 10;
   }
+  updateBars();
 }
 
 function _createCreeps(num) {
@@ -131,6 +127,7 @@ function Hero(type, key) {
     // START BEAR
     case 'bear':
       sprite = game.add.sprite(50, 50, 'bear')
+      sprite.special = 0;
       sprite.anchor.setTo(0.5, 0.5);
       sprite.scale.setTo(0.75, 0.75);
       sprite.animations.add('bear_run', [1, 2, 3, 4, 5, 6, 7], 8, true);
@@ -183,6 +180,7 @@ function Hero(type, key) {
     // START DEFAULT (CHICKEN)
     default:
       sprite = game.add.sprite(550, 550, 'chicken');
+      sprite.special = 0;
       sprite.anchor.setTo(0.5, 0.5);
       sprite.rotation = 180;
       sprite.chomp = function () {
@@ -231,14 +229,14 @@ function Hero(type, key) {
 }
 
 function updateBars() {
-  $('.p1 .barFill').height(600/10*p1special);
-  $('.p2 .barFill').height(600/10*p2special);
-  if (p1special == 10) {
+  $('.p1 .barFill').height(600/10 * hero1.special);
+  $('.p2 .barFill').height(600/10 * hero2.special);
+  if (hero1.special == 10) {
     $('.p1').addClass('glow');
   } else {
     $('.p1').removeClass('glow');
   }
-  if (p2special == 10) {
+  if (hero2.special == 10) {
     $('.p2').addClass('glow');
   } else {
     $('.p2').removeClass('glow');
