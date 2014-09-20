@@ -95,6 +95,7 @@ function _createCreeps(num) {
     game.physics.enable(creep, Phaser.Physics.ARCADE);
     creep.body.velocity.x = _rnd(-100, 100);
     creep.body.velocity.y = _rnd(-100, 100);
+    creep.body.angularVelocity = _rnd(-100, 100);
   }
 
   creeps.setAll('body.collideWorldBounds', true);
@@ -111,6 +112,7 @@ function _resurrectCreep() {
     // creep.frame = _rnd(0, 36); 
     creep.body.velocity.x = _rnd(-100, 100);
     creep.body.velocity.y = _rnd(-100, 100);
+    creep.body.angularVelocity = _rnd(-100, 100);
   }
 }
 
