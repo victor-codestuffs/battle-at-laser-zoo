@@ -13,8 +13,10 @@ var hero1, hero2;
 var key1 = {}, key2 = {};
 var creeps, bullets, bulletTime = 0;
 var fireRate = 100, nextFire = 0;
-
 var bg;
+var SPECIAL_LIMIT = 3;
+var CREEP_LIMIT = 30;
+var CREEP_REGEN_TIME = 5;
 
 function create() {
 
@@ -46,8 +48,8 @@ function create() {
 
   // add creeps
   creeps = game.add.group();
-  _createCreeps(20);
-  game.time.events.repeat(Phaser.Timer.SECOND * 10, 20, _resurrectCreep, this);
+  _createCreeps(CREEP_LIMIT);
+  game.time.events.repeat(Phaser.Timer.SECOND * CREEP_REGEN_TIME, CREEP_LIMIT, _resurrectCreep, this);
 }
 
 function update() {
@@ -61,20 +63,27 @@ function update() {
   game.physics.arcade.collide(creeps, hero2.bullets, _attackCreepCallback, null, this);
   game.physics.arcade.collide(hero2.bullets, hero1);
   game.physics.arcade.collide(hero1.bullets, hero2);
+
+  // collisions = [
+  //   [hero1, hero2],
+  //   [creeps, hero2],
+  //   [creeps, hero1],
+  //   [creeps, hero1.bullets, _attackCreepCallback, null, this],
+  //   [creeps, hero2.bullets, _attackCreepCallback, null, this],
+  //   [hero2.bullets, hero1],
+  //   [hero1.bullets, hero2]
+  // ];
+  // collisions.forEach(function (arr) {
+  //   game.physics.arcade.collide.apply(this, arr);
+  // });
 }
 
 // creep die collision
 function _attackCreepCallback (_creeps, _bullets) {
   _creeps.kill();
   _bullets.kill();
-  if (_bullets.player == 1) {
-    hero1.special += 1;
-    if (hero1.special >= 10) hero1.special = 10;
-  } else {
-    hero2.special += 1;
-    if (hero2.special >= 10) hero2.special = 10;
-  }
-  updateBars();
+  _updateSpecialNum(_bullets.player);
+  _updateBars();
 }
 
 function _createCreeps(num) {
@@ -127,6 +136,14 @@ function _createBullets(img) {
   bullets.setAll('outOfBoundsKill', true);
 
   return bullets;
+}
+
+function _updateSpecialNum(player) {
+  if (player == 1) {
+    hero1.special = (hero1.special < SPECIAL_LIMIT) ? hero1.special += 1 : SPECIAL_LIMIT;
+  } else {
+    hero2.special = (hero2.special < SPECIAL_LIMIT) ? hero2.special += 1 : SPECIAL_LIMIT;
+  }
 }
 
 // HERO MAKER
@@ -241,17 +258,17 @@ function Hero(type, key) {
 
 }
 
-function updateBars() {
-  $('.p1 .barFill').height(600/10 * hero1.special);
-  $('.p2 .barFill').height(600/10 * hero2.special);
-  if (hero1.special == 10) {
-    $('.p1').addClass('glow');
-  } else {
-    $('.p1').removeClass('glow');
-  }
-  if (hero2.special == 10) {
-    $('.p2').addClass('glow');
-  } else {
-    $('.p2').removeClass('glow');
-  }
+// Update power bars
+function _updateBars() {
+  var $p1 = $('.p1');
+  var $p2 = $('.p2');
+  $p1.find('.barFill').height(600 / SPECIAL_LIMIT * hero1.special);
+  $p2.find('.barFill').height(600 / SPECIAL_LIMIT * hero2.special);
+  _glowMe($p1, hero1.special);
+  _glowMe($p2, hero2.special);
+}
+
+// Power bar glow helper
+function _glowMe($el, special) {
+  return (special >= SPECIAL_LIMIT) ? $el.addClass('glow') : $el.removeClass('glow');
 }
