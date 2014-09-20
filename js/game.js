@@ -71,13 +71,14 @@ function update() {
 
   if (key.left.isDown) {
     animal.body.angularVelocity = -200;
-  }
-  else if (key.right.isDown) {
+  } else if (key.right.isDown) {
     animal.body.angularVelocity = 200;
   }
 
   if (key.up.isDown) {
     game.physics.arcade.velocityFromAngle(animal.angle, 300, animal.body.velocity);
+  } else if (key.down.isDown) {
+    game.physics.arcade.velocityFromAngle(animal.angle, -200, animal.body.velocity);
   }
 
   // if (key.space.isDown) {
@@ -90,17 +91,17 @@ function update() {
 
 // basic attack
 function chomp() {
-   if (game.time.now > bulletTime)
-    {
-        //  Grab the first bullet we can from the pool
-        bullet = bullets.getFirstExists(false);
-        if (bullet)
-        {
-            bullet.reset(animal.x, animal.y);
-            bullet.body.velocity.y = 400;
-            bulletTime = game.time.now + 200;
-        }
+  if (game.time.now > bulletTime) {
+    //  Grab the first bullet we can from the pool
+    bullet = bullets.getFirstExists(false);
+    if (bullet) {
+      bullet.reset(animal.body.x + 16, animal.body.y + 16);
+      bullet.lifespan = 300;
+      bullet.rotation = animal.angle;
+      game.physics.arcade.velocityFromRotation(animal.angle, 400, bullet.body.velocity);
+      bulletTime = game.time.now + 50;
     }
+  }
 }
 
 // creep die collision
