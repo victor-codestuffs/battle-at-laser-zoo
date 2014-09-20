@@ -67,6 +67,8 @@ function update() {
   game.physics.arcade.collide(creeps, hero2);
   game.physics.arcade.collide(creeps, hero1);
   game.physics.arcade.collide(creeps, bullets, _attackCreepCallback, null, this);
+  game.physics.arcade.collide(bullets, hero1);
+  game.physics.arcade.collide(bullets, hero2);
 }
 
 // creep die collision
