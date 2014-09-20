@@ -82,7 +82,7 @@ function update() {
   //   chomp();
   // }
 
-  game.physics.arcade.collide(creeps);
+  game.physics.arcade.collide(creeps, animal);
 }
 
 // basic attack
