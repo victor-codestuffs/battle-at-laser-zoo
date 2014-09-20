@@ -27,7 +27,7 @@ function create() {
   animal = game.add.sprite(50, 50, 'bear');
   animal.anchor.setTo(0.5, 0.5);
   animal.scale.setTo(0.75, 0.75);
-  animal.animations.add('bear_run', [1, 2, 3, 4, 5, 6, 7], 10, true);
+  animal.animations.add('bear_run', [1, 2, 3, 4, 5, 6, 7], 8, true);
   animal.animations.add('bear_idle', [0], 10, true);
 
   animal2 = game.add.sprite(550, 550, 'chicken');
