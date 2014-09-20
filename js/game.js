@@ -83,6 +83,7 @@ function update() {
   // }
 
   game.physics.arcade.collide(creeps, animal);
+  game.physics.arcade.collide(creeps, bullets, fireballCreepCallback, null, this);
 }
 
 // basic attack
@@ -93,4 +94,10 @@ function chomp() {
     bullet.reset(animal.x - 8, animal.y - 8); 
     game.physics.arcade.moveToPointer(bullet, 300);
   }
+}
+
+// creep die collision
+function fireballCreepCallback (_creeps, _bullets) {
+  _creeps.kill();
+  _bullets.kill();
 }
