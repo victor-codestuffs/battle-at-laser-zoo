@@ -46,12 +46,12 @@ function create() {
 
   for (var i = 0; i < 30; i++)
   {
-    var s = creeps.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'creep');
+    var s = creeps.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 700), 'creep');
     s.animations.add('spin', [0,1,2,3]);
     s.play('spin', 20, true);
     game.physics.enable(s, Phaser.Physics.ARCADE);
-    s.body.velocity.x = game.rnd.integerInRange(-200, 200);
-    s.body.velocity.y = game.rnd.integerInRange(-200, 200);
+    s.body.velocity.x = game.rnd.integerInRange(-100, 100);
+    s.body.velocity.y = game.rnd.integerInRange(-100, 100);
   }
 
   creeps.setAll('body.collideWorldBounds', true);
