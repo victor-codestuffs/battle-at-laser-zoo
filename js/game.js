@@ -21,9 +21,7 @@ function preload() {
   game.load.spritesheet('bear_ulti', 'assets/sprite_bearrage_ulti.png', 120, 92);
   game.load.spritesheet('topcat', 'assets/sprite_topcat.png', 100, 100);
   game.load.spritesheet('topcat_bullets', 'assets/sprite_topcat_chomp.png', 30, 54);
-  // REIMERS, add sprite dimensions below
-  // game.load.spritesheet('topcat_ulti', 'assets/sprite_topcat_ulti.png', width, height);
-  // then find topcat's line 331 sprite.ultimate = _createBullets('bear_ulti'); and change bear to topcat
+  game.load.spritesheet('topcat_ulti', 'assets/sprite_topcat_ulti.png', 120, 100);
   game.load.image('creep', 'assets/creep.png');
   game.load.audio('laser1', 'assets/audio/laser-1.wav');
   game.load.audio('laser2', 'assets/audio/laser-2.wav');
@@ -331,7 +329,7 @@ function Hero(type, key) {
           }
         }
       };
-      sprite.ultimate = _createBullets('bear_ulti');
+      sprite.ultimate = _createBullets('topcat_ulti');
       sprite.ulti = function () {
         if (game.time.now > bulletTime) {
           //  Grab the first bullet we can from the pool
@@ -339,10 +337,10 @@ function Hero(type, key) {
           if (bullet && sprite.special >= SPECIAL_LIMIT) {
             explosionfx1.play();
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
-            bullet.lifespan = 1500;
+            bullet.lifespan = 1200;
             bullet.angle = sprite.angle;
             bullet.player = 2;
-            game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 500, bullet.body.velocity);
+            game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 800, bullet.body.velocity);
             bulletTime = game.time.now + 50;
             sprite.special = 0;
             $('.p2').removeClass('glow').find('.barFill').css('height', 0);
