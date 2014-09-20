@@ -27,7 +27,6 @@ function create() {
   animal = game.add.sprite(50, 50, 'bear');
   animal.anchor.setTo(0.5, 0.5);
   animal.scale.setTo(0.75, 0.75);
-  animal.angle = 45;
   animal.animations.add('bear_run', [1, 2, 3, 4, 5, 6, 7], 10, true);
   animal.animations.add('bear_idle', [0], 10, true);
 
@@ -101,10 +100,10 @@ function update() {
 
   if (key.up.isDown) {
     animal.animations.play('bear_run');
-    game.physics.arcade.velocityFromAngle(animal.angle, 300, animal.body.velocity);
+    game.physics.arcade.velocityFromAngle(animal.angle + 90, 300, animal.body.velocity);
   } else if (key.down.isDown) {
     animal.animations.play('bear_run');
-    game.physics.arcade.velocityFromAngle(animal.angle, -200, animal.body.velocity);
+    game.physics.arcade.velocityFromAngle(animal.angle + 90, -200, animal.body.velocity);
   } else {
     animal.animations.play('bear_idle');
   }
@@ -121,9 +120,9 @@ function update() {
   }
 
   if (key2.up.isDown) {
-    game.physics.arcade.velocityFromAngle(animal2.angle, 300, animal2.body.velocity);
+    game.physics.arcade.velocityFromAngle(animal2.angle + 90, 300, animal2.body.velocity);
   } else if (key2.down.isDown) {
-    game.physics.arcade.velocityFromAngle(animal2.angle, -200, animal2.body.velocity);
+    game.physics.arcade.velocityFromAngle(animal2.angle + 90, -200, animal2.body.velocity);
   }
 
   // if (key.space.isDown) {
@@ -145,7 +144,7 @@ function chomp() {
       bullet.reset(animal.body.x + 16, animal.body.y + 16);
       bullet.lifespan = 150;
       bullet.rotation = animal.angle;
-      game.physics.arcade.velocityFromAngle(animal.angle, 800, bullet.body.velocity);
+      game.physics.arcade.velocityFromAngle(animal.angle + 90, 800, bullet.body.velocity);
       bulletTime = game.time.now + 50;
     }
   }
@@ -159,7 +158,7 @@ function chomp2() {
       bullet.reset(animal2.body.x + 16, animal2.body.y + 16);
       bullet.lifespan = 150;
       bullet.rotation = animal2.angle;
-      game.physics.arcade.velocityFromAngle(animal2.angle, 800, bullet.body.velocity);
+      game.physics.arcade.velocityFromAngle(animal2.angle + 90, 800, bullet.body.velocity);
       bulletTime = game.time.now + 50;
     }
   }
