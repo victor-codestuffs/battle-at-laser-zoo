@@ -213,7 +213,8 @@ function Hero(type, key) {
             bullet.player = 1;
             game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 500, bullet.body.velocity);
             bulletTime = game.time.now + 50;
-            sprite.special = 0
+            sprite.special = 0;
+            $('.p1').removeClass('glow').find('.barFill').css('height', 0);
           }
         }
       };
