@@ -96,9 +96,9 @@ function chomp() {
     bullet = bullets.getFirstExists(false);
     if (bullet) {
       bullet.reset(animal.body.x + 16, animal.body.y + 16);
-      bullet.lifespan = 300;
+      bullet.lifespan = 150;
       bullet.rotation = animal.angle;
-      game.physics.arcade.velocityFromRotation(animal.angle, 400, bullet.body.velocity);
+      game.physics.arcade.velocityFromAngle(animal.angle, 800, bullet.body.velocity);
       bulletTime = game.time.now + 50;
     }
   }
