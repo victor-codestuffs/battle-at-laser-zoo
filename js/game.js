@@ -10,7 +10,7 @@ function preload() {
 
 var ship;
 var cursors;
-var upKey, downKey, leftKey, rightKey, aKey, wKey, sKey, dKey;
+var upKey, downKey, leftKey, rightKey, spaceKey, aKey, wKey, sKey, dKey;
 
 function create() {
 
@@ -22,6 +22,8 @@ function create() {
   downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
   leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
   rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+  spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
   aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
   wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
   sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
@@ -60,6 +62,8 @@ function create() {
   ship = game.add.sprite(50, game.world.centerY - 50, 'ship');
   ship2 = game.add.sprite(150, game.world.centerY - 50, 'ship');
 
+  spaceKey.onDown.add(fireLaser, this);
+
 }
 
 function update() {
@@ -87,5 +91,10 @@ function update() {
   } else if (dKey.isDown) {
     ship2.x++;
   }
+  
 
+}
+
+function fireLaser() {
+  console.log('fire!');
 }
