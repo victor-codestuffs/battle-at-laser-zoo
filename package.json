@@ -10,5 +10,8 @@
     "load-grunt-tasks": "~0.6.0"
   },
   "author": "Victor Hoang",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^2.1.1"
+  }
 }
