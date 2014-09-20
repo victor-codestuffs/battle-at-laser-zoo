@@ -4,7 +4,7 @@ function preload() {
   game.load.image('arena', 'assets/arena.png');
   game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.image('chicken', 'assets/chicken.png');
-  game.load.image('fireball', 'assets/fireball.png');
+  game.load.spritesheet('bear_chomp', 'assets/sprite_bearrage_chomp.png', 60, 25);
   game.load.image('creep', 'assets/creep.png');
 }
 
@@ -47,7 +47,7 @@ function create() {
   bullets = game.add.group();
   bullets.enableBody = true;
   bullets.physicsBodyType = Phaser.Physics.ARCADE;
-  bullets.createMultiple(10, 'fireball');
+  bullets.createMultiple(10, 'bear_chomp');
   bullets.setAll('anchor.x', 0.5);
   bullets.setAll('anchor.y', 1);
   bullets.setAll('checkWorldBounds', true);
@@ -63,17 +63,14 @@ function update() {
   hero1.update();
   hero2.update();
 
-  // fast chomp
-  // if (key.space.isDown) { chomp(); }
-
   game.physics.arcade.collide(hero1, hero2);
   game.physics.arcade.collide(creeps, hero2);
   game.physics.arcade.collide(creeps, hero1);
-  game.physics.arcade.collide(creeps, bullets, _fireballCreepCallback, null, this);
+  game.physics.arcade.collide(creeps, bullets, _attackCreepCallback, null, this);
 }
 
 // creep die collision
-function _fireballCreepCallback (_creeps, _bullets) {
+function _attackCreepCallback (_creeps, _bullets) {
   _creeps.kill();
   _bullets.kill();
   if (_bullets.player == 1) {
@@ -137,7 +134,7 @@ function Hero(type, key) {
       sprite.anchor.setTo(0.5, 0.5);
       sprite.scale.setTo(0.75, 0.75);
       sprite.animations.add('bear_run', [1, 2, 3, 4, 5, 6, 7], 8, true);
-      sprite.animations.add('bear_chomp', [9, 10, 11, 12, 13, 14, 15], 8, true);
+      sprite.animations.add('bear_chomp', [9, 10, 11, 12, 13, 14, 15], 2, true);
       sprite.animations.add('bear_idle', [0], 10, true);
       sprite.chomp = function () {
         if (game.time.now > bulletTime) {
@@ -145,10 +142,10 @@ function Hero(type, key) {
           bullet = bullets.getFirstExists(false);
           if (bullet) {
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
-            bullet.lifespan = 150;
+            bullet.lifespan = 500;
             bullet.rotation = sprite.angle;
             bullet.player = 1;
-            game.physics.arcade.velocityFromAngle(sprite.angle + 90, 800, bullet.body.velocity);
+            game.physics.arcade.velocityFromAngle(sprite.angle + 90, 500, bullet.body.velocity);
             bulletTime = game.time.now + 50;
           }
         }
@@ -176,6 +173,9 @@ function Hero(type, key) {
           sprite.animations.play('bear_chomp');
         }
 
+        // fast chomp
+        // if (key.basic.isDown) { sprite.chomp(); }
+        // slow chomp
         key.basic.onDown.add(sprite.chomp, this);
       }
       break;
@@ -216,6 +216,9 @@ function Hero(type, key) {
           game.physics.arcade.velocityFromAngle(sprite.angle + 90, -200, sprite.body.velocity);
         }
 
+        // fast chomp
+        // if (key.basic.isDown) { sprite.chomp(); }
+        // slow chomp
         key.basic.onDown.add(sprite.chomp, this);
       }
     // END DEFAULT
