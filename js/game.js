@@ -1,6 +1,7 @@
 var game = new Phaser.Game(600, 600, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update });
 
 function preload() {
+  game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100, 8);
   game.load.image('chicken', 'assets/chicken.png');
   game.load.image('fireball', 'assets/fireball.png');
   game.load.image('creep', 'assets/creep.png');
@@ -23,9 +24,12 @@ function create() {
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  animal = game.add.sprite(50, 50, 'chicken');
+  animal = game.add.sprite(50, 50, 'bear');
   animal.anchor.setTo(0.5, 0.5);
+  animal.scale.setTo(0.75, 0.75);
   animal.rotation = 45;
+  animal.animations.add('bear_run');
+  animal.animations.play('bear_run', 10, true);
 
   animal2 = game.add.sprite(550, 550, 'chicken');
   animal2.anchor.setTo(0.5, 0.5);
@@ -86,6 +90,8 @@ function update() {
   animal.body.velocity.x = 0;
   animal.body.velocity.y = 0;
   animal.body.angularVelocity = 0;
+
+  // calculate movement in terms of character angle. changes direction with left and right.
 
   if (key.left.isDown) {
     animal.body.angularVelocity = -200;
