@@ -143,7 +143,7 @@ function Hero(type, key) {
           if (bullet) {
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
             bullet.lifespan = 500;
-            bullet.rotation = sprite.angle;
+            bullet.angle = sprite.angle;
             bullet.player = 1;
             game.physics.arcade.velocityFromAngle(sprite.angle + 90, 500, bullet.body.velocity);
             bulletTime = game.time.now + 50;
