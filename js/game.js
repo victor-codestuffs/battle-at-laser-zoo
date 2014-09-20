@@ -285,6 +285,24 @@ function Hero(type, key) {
           }
         }
       };
+      sprite.ultimate = _createBullets('bear_ulti');
+      sprite.ulti = function () {
+        if (game.time.now > bulletTime) {
+          //  Grab the first bullet we can from the pool
+          bullet = sprite.ultimate.getFirstExists(false);
+          if (bullet && sprite.special >= SPECIAL_LIMIT) {
+            explosionfx1.play();
+            bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
+            bullet.lifespan = 1500;
+            bullet.angle = sprite.angle;
+            bullet.player = 2;
+            game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 500, bullet.body.velocity);
+            bulletTime = game.time.now + 50;
+            sprite.special = 0;
+            $('.p2').removeClass('glow').find('.barFill').css('height', 0);
+          }
+        }
+      };
       sprite.update = function () {
         sprite.body.velocity.x = 0;
         sprite.body.velocity.y = 0;
@@ -306,6 +324,7 @@ function Hero(type, key) {
         // if (key.basic.isDown) { sprite.chomp(); }
         // slow chomp
         key.basic.onDown.add(sprite.chomp, this);
+        key.special.onDown.add(sprite.ulti, this);
       }
     // END DEFAULT
   }
