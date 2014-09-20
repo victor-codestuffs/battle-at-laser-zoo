@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 800, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(600, 600, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update });
 
 function preload() {
   game.load.image('chicken', 'assets/chicken.png');
@@ -12,14 +12,20 @@ function create() {
 
   game.stage.backgroundColor = '#e5cda1';
 
+  game.physics.startSystem(Phaser.Physics.ARCADE);
+
+  animal = game.add.sprite(50, 50, 'chicken');
+  animal.anchor.setTo(0.5, 0.5);
+
+  game.physics.enable(animal, Phaser.Physics.ARCADE);
+
+  animal.body.collideWorldBounds = true;
+
   key.up = game.input.keyboard.addKey(Phaser.Keyboard.UP);
   key.down = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
   key.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
   key.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
   key.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
-  //  Add a sprite
-  animal = game.add.sprite(50, game.world.centerY - 50, 'chicken');
 
   key.space.onDown.add(chomp, this);
 
@@ -46,16 +52,19 @@ function create() {
 
 function update() {
 
-  if (key.up.isDown) {
-    animal.y--;
-  } else if (key.down.isDown) {
-    animal.y++;
+  animal.body.velocity.x = 0;
+  animal.body.velocity.y = 0;
+  animal.body.angularVelocity = 0;
+
+  if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+    animal.body.angularVelocity = -200;
+  }
+  else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+    animal.body.angularVelocity = 200;
   }
 
-  if (key.left.isDown) {
-    animal.x--;
-  } else if (key.right.isDown) {
-    animal.x++;
+  if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+    game.physics.arcade.velocityFromAngle(animal.angle, 300, animal.body.velocity);
   }
 
   game.physics.arcade.collide(creeps);
