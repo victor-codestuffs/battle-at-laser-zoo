@@ -4,7 +4,7 @@ function preload() {
   game.load.image('arena', 'assets/arena.png');
   game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.image('chicken', 'assets/chicken.png');
-  game.load.image('fireball', 'assets/fireball.png');
+  game.load.image('bear_chomp', 'assets/sprite_bearrage_chomp.png');
   game.load.image('creep', 'assets/creep.png');
 }
 
@@ -47,7 +47,7 @@ function create() {
   bullets = game.add.group();
   bullets.enableBody = true;
   bullets.physicsBodyType = Phaser.Physics.ARCADE;
-  bullets.createMultiple(10, 'fireball');
+  bullets.createMultiple(10, 'bear_chomp');
   bullets.setAll('anchor.x', 0.5);
   bullets.setAll('anchor.y', 1);
   bullets.setAll('checkWorldBounds', true);
@@ -69,11 +69,11 @@ function update() {
   game.physics.arcade.collide(hero1, hero2);
   game.physics.arcade.collide(creeps, hero2);
   game.physics.arcade.collide(creeps, hero1);
-  game.physics.arcade.collide(creeps, bullets, _fireballCreepCallback, null, this);
+  game.physics.arcade.collide(creeps, bullets, _attackCreepCallback, null, this);
 }
 
 // creep die collision
-function _fireballCreepCallback (_creeps, _bullets) {
+function _attackCreepCallback (_creeps, _bullets) {
   _creeps.kill();
   _bullets.kill();
   if (_bullets.player == 1) {
