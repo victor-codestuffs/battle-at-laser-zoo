@@ -15,6 +15,9 @@
       background-color: #000;
       position: relative;
     }
+    body * {
+      border-box: box-sizing;
+    }
     canvas {
       position: absolute;
       margin: auto;
@@ -23,32 +26,30 @@
       bottom: 0;
       left: 0;
     }
-    .barContainer, .barFill {
-      width: 50px;
+    .barContainer {
+      width: 30px;
       height: 600px;
       position: absolute;
-      top: 20px;
-      left: 20px;
-      margin: 0;
-      padding: 0;
+      top: 100px;
+      bottom: 100px;
+      left: 40px;
+      margin: auto 0;
       background: transparent;
       border: 2px solid #c00;
     }
     .barFill {
-      width: 46px;
+      position: absolute;
       bottom: 0;
-      left: 0;
-      right: initial;
-      top: initial;
-      height: 10px;
+      width: 100%;
+      height: 0;
       -webkit-transition: height 2s;
       transition: height 2s;
-      background: #c00;
+      background: tomato;
     }
 
-    .barContainer.p2 {
-      right: 20px;
-      left: initial;
+    .p2 {
+      right: 40px;
+      left: auto;
     }
 
     .glow {
@@ -69,8 +70,7 @@
   <script>
     $( document ).ready(function() {
       $('body').append('<div class="barContainer p1"><div class="barFill"></div></div>');
-      $('body').append('<div class="barContainer p2"><div class="barFill p2"></div></div>');
-      $('.barContainer').height( $(window).height() - 40);
+      $('body').append('<div class="barContainer p2"><div class="barFill"></div></div>');
     });
   </script>
 </body>
