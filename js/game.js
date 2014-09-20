@@ -34,6 +34,7 @@ function create() {
   animal.anchor.setTo(0.5, 0.5);
   animal.scale.setTo(0.75, 0.75);
   animal.animations.add('bear_run', [1, 2, 3, 4, 5, 6, 7], 8, true);
+  animal.animations.add('bear_chomp', [9, 10, 11, 12, 13, 14, 15], 8, true);
   animal.animations.add('bear_idle', [0], 10, true);
 
   animal2 = game.add.sprite(550, 550, 'chicken');
@@ -111,9 +112,7 @@ function update() {
   } else if (key.down.isDown) {
     animal.animations.play('bear_run');
     game.physics.arcade.velocityFromAngle(animal.angle + 90, -200, animal.body.velocity);
-  } else {
-    animal.animations.play('bear_idle');
-  }
+  } 
 
   // animal 2
   animal2.body.velocity.x = 0;
@@ -132,6 +131,9 @@ function update() {
     game.physics.arcade.velocityFromAngle(animal2.angle + 90, -200, animal2.body.velocity);
   }
 
+  if (key.space.isDown) {
+    animal.animations.play('bear_chomp');
+  }
   // if (key.space.isDown) {
   //   chomp();
   // }
