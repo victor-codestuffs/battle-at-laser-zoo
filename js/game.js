@@ -1,6 +1,7 @@
 var game = new Phaser.Game(600, 600, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update });
 
 function preload() {
+  game.load.image('arena', 'assets/arena.png');
   game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.image('chicken', 'assets/chicken.png');
   game.load.image('fireball', 'assets/fireball.png');
@@ -21,9 +22,11 @@ var nextFire = 0;
 var p1special = 0;
 var p2special = 0;
 
+var bg;
+
 function create() {
 
-  game.stage.backgroundColor = '#e5cda1';
+  bg = game.add.tileSprite(0, 0, 600, 600, 'arena');
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
