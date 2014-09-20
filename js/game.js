@@ -231,16 +231,16 @@ function Hero(type, key) {
 }
 
 function updateBars() {
-  $('.barContainer.p1 .barFill').height($('.barContainer').height()/10*p1special);
-  $('.barContainer.p2 .barFill').height($('.barContainer').height()/10*p2special);
+  $('.p1 .barFill').height(600/10*p1special);
+  $('.p2 .barFill').height(600/10*p2special);
   if (p1special == 10) {
-    $('.barContainer.p1').addClass('glow');
+    $('.p1').addClass('glow');
   } else {
-    $('.barContainer.p1').removeClass('glow');
+    $('.p1').removeClass('glow');
   }
   if (p2special == 10) {
-    $('.barContainer.p2').addClass('glow');
+    $('.p2').addClass('glow');
   } else {
-    $('.barContainer.p2').removeClass('glow');
+    $('.p2').removeClass('glow');
   }
 }
