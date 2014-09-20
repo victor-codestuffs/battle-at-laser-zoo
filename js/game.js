@@ -6,8 +6,13 @@ function preload() {
   game.load.image('creep', 'assets/creep.png');
 }
 
+// TODO: Refactor code for 2 animals
+
 var animal;
+var animal2;
+var creeps;
 var key = {};
+var key2 = {};
 var bullets, bulletTime = 0;
 var fireRate = 100;
 var nextFire = 0;
@@ -20,15 +25,22 @@ function create() {
 
   animal = game.add.sprite(50, 50, 'chicken');
   animal.anchor.setTo(0.5, 0.5);
+  animal.rotation = 45;
+
+  animal2 = game.add.sprite(550, 550, 'chicken');
+  animal2.anchor.setTo(0.5, 0.5);
+  animal2.rotation = 180;
 
   game.physics.enable(animal, Phaser.Physics.ARCADE);
+  game.physics.enable(animal2, Phaser.Physics.ARCADE);
 
   animal.body.collideWorldBounds = true;
+  animal2.body.collideWorldBounds = true;
 
   bullets = game.add.group();
   bullets.enableBody = true;
   bullets.physicsBodyType = Phaser.Physics.ARCADE;
-  bullets.createMultiple(5, 'fireball');
+  bullets.createMultiple(10, 'fireball');
   bullets.setAll('anchor.x', 0.5);
   bullets.setAll('anchor.y', 1);
   bullets.setAll('checkWorldBounds', true);
@@ -38,10 +50,16 @@ function create() {
   key.down = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
   key.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
   key.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-  key.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  key.enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
-  key.space.onDown.add(chomp, this);
-
+  key2.up = game.input.keyboard.addKey(Phaser.Keyboard.W);
+  key2.down = game.input.keyboard.addKey(Phaser.Keyboard.S);
+  key2.left = game.input.keyboard.addKey(Phaser.Keyboard.A);
+  key2.right = game.input.keyboard.addKey(Phaser.Keyboard.D);
+  key2.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  
+  key.enter.onDown.add(chomp, this);
+  key2.space.onDown.add(chomp2, this);
 
   // add creeps
   creeps = game.add.group();
@@ -81,10 +99,29 @@ function update() {
     game.physics.arcade.velocityFromAngle(animal.angle, -200, animal.body.velocity);
   }
 
+  // animal 2
+  animal2.body.velocity.x = 0;
+  animal2.body.velocity.y = 0;
+  animal2.body.angularVelocity = 0;
+
+  if (key2.left.isDown) {
+    animal2.body.angularVelocity = -200;
+  } else if (key2.right.isDown) {
+    animal2.body.angularVelocity = 200;
+  }
+
+  if (key2.up.isDown) {
+    game.physics.arcade.velocityFromAngle(animal2.angle, 300, animal2.body.velocity);
+  } else if (key2.down.isDown) {
+    game.physics.arcade.velocityFromAngle(animal2.angle, -200, animal2.body.velocity);
+  }
+
   // if (key.space.isDown) {
   //   chomp();
   // }
 
+  game.physics.arcade.collide(animal, animal2);
+  game.physics.arcade.collide(creeps, animal2);
   game.physics.arcade.collide(creeps, animal);
   game.physics.arcade.collide(creeps, bullets, fireballCreepCallback, null, this);
 }
@@ -99,6 +136,20 @@ function chomp() {
       bullet.lifespan = 150;
       bullet.rotation = animal.angle;
       game.physics.arcade.velocityFromAngle(animal.angle, 800, bullet.body.velocity);
+      bulletTime = game.time.now + 50;
+    }
+  }
+}
+
+function chomp2() {
+  if (game.time.now > bulletTime) {
+    //  Grab the first bullet we can from the pool
+    bullet = bullets.getFirstExists(false);
+    if (bullet) {
+      bullet.reset(animal2.body.x + 16, animal2.body.y + 16);
+      bullet.lifespan = 150;
+      bullet.rotation = animal2.angle;
+      game.physics.arcade.velocityFromAngle(animal2.angle, 800, bullet.body.velocity);
       bulletTime = game.time.now + 50;
     }
   }
