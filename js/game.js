@@ -1,6 +1,18 @@
 var game = new Phaser.Game(600, 600, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update });
 
+WebFontConfig = {
+
+  //  We set a 1 second delay before calling 'createText'.
+  //  For some reason if we don't the browser cannot render the text the first time it's created.
+  // active: function() { game.time.events.add(Phaser.Timer.SECOND, createText, this); },
+  google: {
+    families: ['Roboto']
+  }
+
+};
+
 function preload() {
+  game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
   game.load.image('arena', 'assets/arena.png');
   game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.image('chicken', 'assets/chicken.png');
@@ -24,7 +36,7 @@ var bg;
 var SPECIAL_LIMIT = 3;
 var CREEP_LIMIT = 30;
 var CREEP_REGEN_TIME = 5;
-var winner, stateText;
+var openText, winner, stateText;
 
 function create() {
 
@@ -66,7 +78,11 @@ function create() {
   game.time.events.repeat(Phaser.Timer.SECOND * CREEP_REGEN_TIME, CREEP_LIMIT, _resurrectCreep, this);
 
   // text
-  stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
+  openText = game.add.text(game.world.centerX,game.world.centerY, "Let them fight!", { font: '72px Roboto', fill: 'cyan' });
+  openText.anchor.setTo(0.5, 0.5);
+  game.input.onDown.add(removeIntro, this);
+
+  stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart", { font: '72px Roboto', fill: 'cyan' });
   stateText.anchor.setTo(0.5, 0.5);
   stateText.visible = false;
 }
@@ -99,6 +115,13 @@ function update() {
   // });
 }
 
+function removeIntro () {
+
+  game.input.onDown.remove(removeIntro, this);
+  openText.destroy();
+
+}
+
 function _heroShotCallback(_heroes, _bullets) {
   if (_bullets.player == 1) {
     hurtfx1.play();
@@ -120,7 +143,6 @@ function _heroKillCallback(_heroes, _bullets) {
     hero1.kill();
     winner = hero2;
   }
-  stateText.text= "You're winner\nClick to restart";
   stateText.visible = true;
   //the "click to restart" handler
   game.input.onTap.addOnce(_restart, this);
