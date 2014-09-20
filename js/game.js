@@ -12,6 +12,8 @@ function preload() {
   game.load.audio('laser2', 'assets/audio/laser-2.wav');
   game.load.audio('hurt1', 'assets/audio/hurt-1.wav');
   game.load.audio('hurt2', 'assets/audio/hurt-2.wav');
+  game.load.audio('explosion1', 'assets/audio/explosion-1.wav');
+  game.load.audio('explosion2', 'assets/audio/explosion-2.wav');
 }
 
 var hero1, hero2;
@@ -30,6 +32,8 @@ function create() {
   laserfx2 = game.add.audio('laser2');
   hurtfx1 = game.add.audio('hurt1');
   hurtfx2 = game.add.audio('hurt2');
+  explosionfx1 = game.add.audio('explosion1');
+  explosionfx1 = game.add.audio('explosion2');
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -202,6 +206,7 @@ function Hero(type, key) {
           //  Grab the first bullet we can from the pool
           bullet = sprite.ultimate.getFirstExists(false);
           if (bullet && sprite.special >= SPECIAL_LIMIT) {
+            explosionfx1.play();
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
             bullet.lifespan = 1000;
             bullet.angle = sprite.angle;
