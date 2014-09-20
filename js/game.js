@@ -123,7 +123,8 @@ function _rnd(low, high) {
 
 // HERO MAKER
 function Hero(type, key) {
-  var sprite;
+  var sprite, 
+    FIXED_ROTATION = 90;
 
   switch (type) {
     // START BEAR
@@ -144,7 +145,7 @@ function Hero(type, key) {
             bullet.lifespan = 500;
             bullet.angle = sprite.angle;
             bullet.player = 1;
-            game.physics.arcade.velocityFromAngle(sprite.angle + 90, 500, bullet.body.velocity);
+            game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 500, bullet.body.velocity);
             bulletTime = game.time.now + 50;
           }
         }
@@ -162,10 +163,10 @@ function Hero(type, key) {
 
         if (key.up.isDown) {
           sprite.animations.play('bear_run');
-          game.physics.arcade.velocityFromAngle(sprite.angle + 90, 300, sprite.body.velocity);
+          game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 300, sprite.body.velocity);
         } else if (key.down.isDown) {
           sprite.animations.play('bear_run');
-          game.physics.arcade.velocityFromAngle(sprite.angle + 90, -200, sprite.body.velocity);
+          game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, -200, sprite.body.velocity);
         }
 
         if (key.basic.isDown) {
@@ -192,9 +193,9 @@ function Hero(type, key) {
           if (bullet) {
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
             bullet.lifespan = 150;
-            bullet.rotation = sprite.angle;
+            bullet.angle = sprite.angle;
             bullet.player = 2;
-            game.physics.arcade.velocityFromAngle(sprite.angle + 90, 800, bullet.body.velocity);
+            game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 800, bullet.body.velocity);
             bulletTime = game.time.now + 50;
           }
         }
@@ -211,9 +212,9 @@ function Hero(type, key) {
         }
 
         if (key.up.isDown) {
-          game.physics.arcade.velocityFromAngle(sprite.angle + 90, 300, sprite.body.velocity);
+          game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 300, sprite.body.velocity);
         } else if (key.down.isDown) {
-          game.physics.arcade.velocityFromAngle(sprite.angle + 90, -200, sprite.body.velocity);
+          game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, -200, sprite.body.velocity);
         }
 
         // fast chomp
