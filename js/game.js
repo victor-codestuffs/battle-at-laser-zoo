@@ -28,14 +28,16 @@ function create() {
     down: _addKey(Phaser.Keyboard.S),
     left: _addKey(Phaser.Keyboard.A),
     right: _addKey(Phaser.Keyboard.D),
-    basic: _addKey(Phaser.Keyboard.SPACEBAR)
+    basic: _addKey(Phaser.Keyboard.SPACEBAR),
+    special: addKey(Phaser.Keyboard.V)
   };
   key2 = {
     up: _addKey(Phaser.Keyboard.UP),
     down: _addKey(Phaser.Keyboard.DOWN),
     left: _addKey(Phaser.Keyboard.LEFT),
     right: _addKey(Phaser.Keyboard.RIGHT),
-    basic: _addKey(Phaser.Keyboard.ENTER)
+    basic: _addKey(Phaser.Keyboard.ENTER),
+    special: addKey(Phaser.Keyboard.SHIFT)
   }
 
   // Make dem heroes
