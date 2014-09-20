@@ -69,12 +69,12 @@ function create() {
 
   for (var i = 0; i < 30; i++)
   {
-    var s = creeps.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 700), 'creep');
-    s.animations.add('spin', [0,1,2,3]);
-    s.play('spin', 20, true);
-    game.physics.enable(s, Phaser.Physics.ARCADE);
-    s.body.velocity.x = game.rnd.integerInRange(-100, 100);
-    s.body.velocity.y = game.rnd.integerInRange(-100, 100);
+    var creep = creeps.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 700), 'creep');
+    // creep.animations.add('spin', [0,1,2,3]);
+    // creep.play('spin', 20, true);
+    game.physics.enable(creep, Phaser.Physics.ARCADE);
+    creep.body.velocity.x = game.rnd.integerInRange(-100, 100);
+    creep.body.velocity.y = game.rnd.integerInRange(-100, 100);
   }
 
   creeps.setAll('body.collideWorldBounds', true);
@@ -82,6 +82,7 @@ function create() {
   creeps.setAll('body.bounce.y', 1);
   creeps.setAll('body.minBounceVelocity', 0);
 
+  game.time.events.repeat(Phaser.Timer.SECOND * 10, 20, resurrect, this);
 }
 
 function update() {
@@ -168,4 +169,21 @@ function chomp2() {
 function fireballCreepCallback (_creeps, _bullets) {
   _creeps.kill();
   _bullets.kill();
+}
+
+function resurrect() {
+
+  //  Get a dead item
+  var creep = creeps.getFirstDead();
+
+  if (creep) {
+    //  And bring it back to life
+    creep.reset(game.world.randomX, game.world.randomY);
+
+    //  This just changes its frame
+    creep.frame = game.rnd.integerInRange(0, 36);
+
+    creep.body.velocity.x = game.rnd.integerInRange(-100, 100);
+    creep.body.velocity.y = game.rnd.integerInRange(-100, 100);
+  }
 }
