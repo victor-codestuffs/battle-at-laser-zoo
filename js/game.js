@@ -4,7 +4,7 @@ WebFontConfig = {
 
   //  We set a 1 second delay before calling 'createText'.
   //  For some reason if we don't the browser cannot render the text the first time it's created.
-  // active: function() { game.time.events.add(Phaser.Timer.SECOND, createText, this); },
+  active: function() { game.time.events.add(Phaser.Timer.SECOND, _showIntro, this); },
   google: {
     families: ['Roboto']
   }
@@ -78,11 +78,7 @@ function create() {
   game.time.events.repeat(Phaser.Timer.SECOND * CREEP_REGEN_TIME, CREEP_LIMIT, _resurrectCreep, this);
 
   // text
-  openText = game.add.text(game.world.centerX,game.world.centerY, "Let them fight!", { font: '72px Roboto', fill: 'cyan' });
-  openText.anchor.setTo(0.5, 0.5);
-  game.input.onDown.add(removeIntro, this);
-
-  stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart", { font: '72px Roboto', fill: 'cyan' });
+  stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart", { font: '72px Roboto', fill: 'cyan', align: 'center' });
   stateText.anchor.setTo(0.5, 0.5);
   stateText.visible = false;
 }
@@ -115,11 +111,15 @@ function update() {
   // });
 }
 
-function removeIntro () {
+function _showIntro () {
+  openText = game.add.text(game.world.centerX,game.world.centerY, "Let them fight!", { font: '72px Roboto', fill: 'cyan', align: 'center' });
+  openText.anchor.setTo(0.5, 0.5);
+  game.input.onDown.add(_removeIntro, this);
+}
 
-  game.input.onDown.remove(removeIntro, this);
+function _removeIntro () {
+  game.input.onDown.remove(_removeIntro, this);
   openText.destroy();
-
 }
 
 function _heroShotCallback(_heroes, _bullets) {
