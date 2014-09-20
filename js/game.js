@@ -18,6 +18,9 @@ var bullets, bulletTime = 0;
 var fireRate = 100;
 var nextFire = 0;
 
+var p1special = 0;
+var p2special = 0;
+
 function create() {
 
   game.stage.backgroundColor = '#e5cda1';
@@ -145,6 +148,7 @@ function chomp() {
       bullet.reset(animal.body.x + 16, animal.body.y + 16);
       bullet.lifespan = 150;
       bullet.rotation = animal.angle;
+      bullet.player = 1;
       game.physics.arcade.velocityFromAngle(animal.angle + 90, 800, bullet.body.velocity);
       bulletTime = game.time.now + 50;
     }
@@ -159,6 +163,7 @@ function chomp2() {
       bullet.reset(animal2.body.x + 16, animal2.body.y + 16);
       bullet.lifespan = 150;
       bullet.rotation = animal2.angle;
+      bullet.player = 2;
       game.physics.arcade.velocityFromAngle(animal2.angle + 90, 800, bullet.body.velocity);
       bulletTime = game.time.now + 50;
     }
@@ -169,6 +174,11 @@ function chomp2() {
 function fireballCreepCallback (_creeps, _bullets) {
   _creeps.kill();
   _bullets.kill();
+  if (_bullets.player == 1) {
+    p1special += 1;
+  } else {
+    p2special += 1;
+  }
 }
 
 function resurrect() {
