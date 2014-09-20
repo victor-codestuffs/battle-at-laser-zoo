@@ -76,8 +76,8 @@ function update() {
   game.physics.arcade.collide(creeps, hero2.bullets, _attackCreepCallback, null, this);
   game.physics.arcade.collide(hero2.bullets, hero1, _heroShotCallback, null, this);
   game.physics.arcade.collide(hero1.bullets, hero2, _heroShotCallback, null, this);
-  game.physics.arcade.collide(hero2.ultimate, hero1);
-  game.physics.arcade.collide(hero1.ultimate, hero2);
+  game.physics.arcade.collide(hero2.ultimate, hero1, _heroKillCallback, null, this);
+  game.physics.arcade.collide(hero1.ultimate, hero2, _heroKillCallback, null, this);
 
   // collisions = [
   //   [hero1, hero2],
@@ -101,8 +101,21 @@ function _heroShotCallback(_heroes, _bullets) {
   }
 }
 
+
+function _heroKillCallback(_heroes, _bullets) {
+  if (_bullets.player == 1) {
+    hurtfx1.play();
+    _bullets.kill();
+    hero2.kill();
+  } else {
+    hurtfx2.play();
+    _bullets.kill();
+    hero1.kill();
+  }
+}
+
 // creep die collision
-function _attackCreepCallback (_creeps, _bullets) {
+function _attackCreepCallback(_creeps, _bullets) {
   _creeps.kill();
   _bullets.kill();
   _updateSpecialNum(_bullets.player);
@@ -208,7 +221,7 @@ function Hero(type, key) {
           if (bullet && sprite.special >= SPECIAL_LIMIT) {
             explosionfx1.play();
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
-            bullet.lifespan = 1000;
+            bullet.lifespan = 1500;
             bullet.angle = sprite.angle;
             bullet.player = 1;
             game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 500, bullet.body.velocity);
