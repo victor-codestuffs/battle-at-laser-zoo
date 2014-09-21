@@ -16,13 +16,13 @@ function preload() {
   game.load.image('arena', 'assets/arena.png');
   game.load.image('chicken', 'assets/chicken.png');
   game.load.image('fireball', 'assets/fireball.png');
+  game.load.image('creep', 'assets/creep.png');
   game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.spritesheet('bear_bullets', 'assets/sprite_bearrage_chomp.png', 60, 25);
   game.load.spritesheet('bear_ulti', 'assets/sprite_bearrage_ulti.png', 120, 92);
   game.load.spritesheet('topcat', 'assets/sprite_topcat.png', 100, 100);
   game.load.spritesheet('topcat_bullets', 'assets/sprite_topcat_chomp.png', 30, 54);
   game.load.spritesheet('topcat_ulti', 'assets/sprite_topcat_ulti.png', 120, 100);
-  game.load.image('creep', 'assets/creep.png');
   game.load.audio('laser1', 'assets/audio/laser-1.wav');
   game.load.audio('laser2', 'assets/audio/laser-2.wav');
   game.load.audio('hurt1', 'assets/audio/hurt-1.wav');
@@ -37,10 +37,10 @@ var key1 = {}, key2 = {};
 var creeps, bullets, bulletTime = 0;
 var fireRate = 100, nextFire = 0;
 var bg;
+var introText = null, stateText = null;
 var SPECIAL_LIMIT = 3;
 var CREEP_LIMIT = 30;
 var CREEP_REGEN_TIME = 5;
-var openText, winner, stateText;
 
 function create() {
 
@@ -83,7 +83,11 @@ function create() {
   game.time.events.repeat(Phaser.Timer.SECOND * CREEP_REGEN_TIME, CREEP_LIMIT, _resurrectCreep, this);
 
   // text
-  stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart", { font: '72px Roboto', fill: 'cyan', align: 'center' });
+  stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart");
+  stateText.font = 'Roboto';
+  stateText.fill = 'cyan';
+  stateText.fontSize = 60;
+  stateText.align = 'center';
   stateText.anchor.setTo(0.5, 0.5);
   stateText.visible = false;
 }
@@ -117,15 +121,19 @@ function update() {
 }
 
 function _showIntro () {
-  openText = game.add.text(game.world.centerX,game.world.centerY, "Let them fight!", { font: '72px Roboto', fill: 'cyan', align: 'center' });
   letthemfightfx.play();
-  openText.anchor.setTo(0.5, 0.5);
+  introText = game.add.text(game.world.centerX,game.world.centerY, "Let them fight!");
+  introText.font = 'Roboto';
+  introText.fill = 'cyan';
+  introText.fontSize = 60;
+  introText.align = 'center';
+  introText.anchor.setTo(0.5, 0.5);
   game.input.onDown.add(_removeIntro, this);
 }
 
 function _removeIntro () {
   game.input.onDown.remove(_removeIntro, this);
-  openText.destroy();
+  introText.destroy();
 }
 
 function _heroShotCallback(_heroes, _bullets) {
@@ -142,12 +150,10 @@ function _heroKillCallback(_heroes, _bullets) {
     hurtfx1.play();
     _bullets.kill();
     hero2.kill();
-    winner = hero1;
   } else {
     hurtfx2.play();
     _bullets.kill();
     hero1.kill();
-    winner = hero2;
   }
   stateText.visible = true;
   //the "click to restart" handler
@@ -337,7 +343,7 @@ function Hero(type, key) {
           if (bullet && sprite.special >= SPECIAL_LIMIT) {
             explosionfx1.play();
             bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
-            bullet.lifespan = 1200;
+            bullet.lifespan = 800;
             bullet.angle = sprite.angle;
             bullet.player = 2;
             game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, 800, bullet.body.velocity);
