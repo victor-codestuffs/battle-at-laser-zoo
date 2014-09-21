@@ -1,0 +1,110 @@
+{
+  "bearrage" : {
+    "sprite" : {
+      "x" : 50,
+      "y" : 50,
+      "key" : "bear",
+      "frame" : 0
+    },
+    "rotation" : -45,
+    "speed" : {
+      "turn" : 200,
+      "forward" : 200,
+      "backward" : -150
+    },
+    "update_anims" : {
+      "move" : "bear_run",
+      "attack" : "bear_chomp",
+      "idle" : "bear_idle"
+    },
+    "add_anims" : [
+      {
+        "key" : "bear_run",
+        "frames" : [1, 2, 3, 4, 5, 6, 7],
+        "fps" : 16,
+        "loop" : false
+      },
+      {
+        "key" : "bear_chomp",
+        "frames" : [9, 10, 11, 12, 13, 14, 15],
+        "fps" : 16,
+        "loop" : false
+      },
+      {
+        "key" : "bear_idle",
+        "frames" : [0],
+        "fps" : 1,
+        "loop" : true
+      }
+    ],
+    "basic" : {
+      "key" : "bear_bullets",
+      "lifespan" : 550,
+      "speed" : 350
+    },
+    "ultimate" : {
+      "key" : "bear_ulti",
+      "lifespan" : 1000,
+      "speed" : 600
+    },
+    "fx" : {
+      "basic" : "laser1",
+      "ultimate" : "explosion1",
+      "damaged" :  "hurt1"
+    }
+  },
+  "topcat" : {
+    "sprite" : {
+      "x" : 650,
+      "y" : 650,
+      "key" : "topcat",
+      "frame" : 0
+    },
+    "rotation" : 90,
+    "speed" : {
+      "turn" : 200,
+      "forward" : 225,
+      "backward" : -175
+    },
+    "update_anims" : {
+      "move" : "topcat_run",
+      "attack" : "topcat_chomp",
+      "idle" : "topcat_idle"
+    },
+    "add_anims" : [
+      {
+        "key" : "topcat_run",
+        "frames" : [1, 2, 3, 4, 5, 6, 7],
+        "fps" : 16,
+        "loop" : false
+      },
+      {
+        "key" : "topcat_chomp",
+        "frames" : [9, 10, 11, 12, 13, 14, 15],
+        "fps" : 16,
+        "loop" : false
+      },
+      {
+        "key" : "topcat_idle",
+        "frames" : [0],
+        "fps" : 1,
+        "loop" : true
+      }
+    ],
+    "basic" : {
+      "key" : "topcat_bullets",
+      "lifespan" : 400,
+      "speed" : 400
+    },
+    "ultimate" : {
+      "key" : "topcat_ulti",
+      "lifespan" : 1500,
+      "speed" : 500
+    },
+    "fx" : {
+      "basic" : "laser2",
+      "ultimate" : "explosion2",
+      "damaged" :  "hurt2"
+    }
+  }
+}

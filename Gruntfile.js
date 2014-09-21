@@ -20,7 +20,7 @@ module.exports = function(grunt) {
     watch: {
       options: { livereload: true },
       js: {
-        files: ['js/game.js'],
+        files: ['js/game.js', 'js/config.json'],
         options: { spawn: false }
       },
       html: {
