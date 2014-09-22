@@ -62,15 +62,6 @@ function create() {
   fx.explosion2 = game.add.audio('explosion2');
   fx.letThemFight = game.add.audio('letthemfight');
 
-  // text
-  stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart");
-  stateText.font = 'Roboto';
-  stateText.fill = 'cyan';
-  stateText.fontSize = 60;
-  stateText.align = 'center';
-  stateText.anchor.setTo(0.5, 0.5);
-  stateText.visible = false;
-
 }
 
 
@@ -358,9 +349,8 @@ function _restart () {
   
   //resets the life count
   // lives.callAll('revive');
-  //  And brings the aliens back from the dead :)
-  // aliens.removeAll();
-  // createAliens();
+  creeps.removeAll();
+  creeps = _createCreeps(CREEP_LIMIT);
 
   //revives the player
   hero1.revive();
@@ -382,7 +372,17 @@ function _showIntro () {
   introText.fontSize = 60;
   introText.align = 'center';
   introText.anchor.setTo(0.5, 0.5);
+
+  stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart");
+  stateText.font = 'Roboto';
+  stateText.fill = 'cyan';
+  stateText.fontSize = 60;
+  stateText.align = 'center';
+  stateText.anchor.setTo(0.5, 0.5);
+  stateText.visible = false;
+
   game.input.onDown.add(_removeIntro, this);
+
 }
 
 function _removeIntro () {
