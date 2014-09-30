@@ -1,4 +1,4 @@
-var game = new Phaser.Game(600, 600, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(600, 600, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update, render:render  });
 
 WebFontConfig = {
   active: function () { game.time.events.add(Phaser.Timer.SECOND, _showIntro, this); },
@@ -100,6 +100,15 @@ function update() {
   // collisions.forEach(function (arr) {
   //   game.physics.arcade.collide.apply(this, arr);
   // });
+}
+
+function render() {
+  game.debug.body(hero1);
+  game.debug.spriteBounds(hero1.bullets);
+  game.debug.spriteBounds(hero1.ultimate);
+  game.debug.body(hero2);
+  game.debug.spriteBounds(hero2.bullets);
+  game.debug.spriteBounds(hero2.ultimate);
 }
 
 // HERO MAKER
