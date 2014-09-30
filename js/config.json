@@ -8,7 +8,7 @@
     },
     "rotation" : -45,
     "speed" : {
-      "turn" : 200,
+      "turn" : 250,
       "forward" : 200,
       "backward" : -150
     },
@@ -62,7 +62,7 @@
     },
     "rotation" : 90,
     "speed" : {
-      "turn" : 200,
+      "turn" : 250,
       "forward" : 225,
       "backward" : -175
     },

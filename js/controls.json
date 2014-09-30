@@ -1,0 +1,26 @@
+{
+  "keyboard" : {
+    "forward" : "W",
+    "back" : "S",
+    "left" : "A",
+    "right" : "D",
+    "basic" : "SPACEBAR",
+    "special" : "V"
+  },
+  "keyboard2" : {
+    "forward" : "UP",
+    "back" : "DOWN",
+    "left" : "LEFT",
+    "right" : "RIGHT",
+    "basic" : "NUMPAD_0",
+    "special" : "NUMPAD_DECIMAL"
+  },
+  "gamepad" : {
+    "forward" : "XBOX360_A",
+    "back" : "XBOX360_B",
+    "left" : "XBOX360_DPAD_LEFT",
+    "right" : "XBOX360_DPAD_RIGHT",
+    "basic" : "XBOX360_RIGHT_TRIGGER",
+    "special" : "XBOX360_LEFT_TRIGGER"
+  }
+}

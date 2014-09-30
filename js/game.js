@@ -8,6 +8,7 @@ WebFontConfig = {
 function preload() {
   game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
   game.load.json('config', 'js/config.json');
+  game.load.json('controls', 'js/controls.json');
   game.load.image('arena', 'assets/arena.png');
   game.load.image('chicken', 'assets/chicken.png');
   game.load.image('fireball', 'assets/fireball.png');
@@ -32,7 +33,9 @@ var player1 = {}, player2 = {};
 var hero1, hero2, creeps;
 var bullets, bulletTime = 0, fireRate = 100, nextFire = 0;
 var introText = null, stateText = null;
-var config;
+var config, controls;
+var pad1;
+var soundEnabled = false;
 
 // CONSTANTS
 var SPECIAL_LIMIT = 3;
@@ -48,7 +51,12 @@ function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   config = game.cache.getJSON('config');
+  controls = game.cache.getJSON('controls');
 
+  // for xbox controller
+  game.input.gamepad.start();
+
+  // hero1 = new Hero('bearrage', 1, 'gamepad');
   hero1 = new Hero('bearrage', 1, 'keyboard');
   hero2 = new Hero('topcat', 2, 'keyboard');
   creeps = _createCreeps(CREEP_LIMIT);
@@ -96,7 +104,7 @@ function update() {
 
 // HERO MAKER
 function Hero(character, playerNum, inputType) {
-  var sprite, cfg, anim, input;
+  var sprite, cfg, anim, input, map, buttons;
 
   switch (character) {
     case "bearrage":
@@ -109,29 +117,9 @@ function Hero(character, playerNum, inputType) {
       cfg = config.chicken;
   }
 
-  // set which keyboard buttons depending on player number
-  // TO DO, check if player is using keyboard versus controller with inputType
-  switch (playerNum) {
-    case 1:
-      input = {
-        up: _addKey('W'),
-        down: _addKey('S'),
-        left: _addKey('A'),
-        right: _addKey('D'),
-        basic: _addKey('SPACEBAR'),
-        special: _addKey('V')
-      };
-      break;
-    default:
-      input = {
-        up: _addKey('UP'),
-        down: _addKey('DOWN'),
-        left: _addKey('LEFT'),
-        right: _addKey('RIGHT'),
-        basic: _addKey('ENTER'),
-        special: _addKey('SHIFT')
-      }
-  }
+  input = _getInput(inputType);
+  map = _getMapping(inputType);
+  buttons = _getButtons(inputType, playerNum);
 
   sprite = game.add.sprite(cfg.sprite.x, cfg.sprite.y, cfg.sprite.key, cfg.sprite.frame)
   sprite.rotation = cfg.rotation;
@@ -149,7 +137,9 @@ function Hero(character, playerNum, inputType) {
   // basic attack
   sprite.chomp = function () {
     if (game.time.now > bulletTime) {
-      fx[cfg.fx.basic].play();
+      if (soundEnabled) {
+        fx[cfg.fx.basic].play();
+      }
       //  Grab the first bullet we can from the pool
       bullet = sprite.bullets.getFirstExists(false);
       if (bullet) {
@@ -169,7 +159,9 @@ function Hero(character, playerNum, inputType) {
       //  Grab the first bullet we can from the pool
       bullet = sprite.ultimate.getFirstExists(false);
       if (bullet && sprite.special >= SPECIAL_LIMIT) {
-        fx[cfg.fx.ultimate].play();
+        if (soundEnabled) {
+          fx[cfg.fx.ultimate].play();
+        }
         bullet.reset(sprite.body.x + 16, sprite.body.y + 16);
         bullet.lifespan = cfg.ultimate.lifespan;
         bullet.angle = sprite.angle;
@@ -188,29 +180,34 @@ function Hero(character, playerNum, inputType) {
     sprite.body.velocity.y = 0;
     sprite.body.angularVelocity = 0;
 
-    if (input.left.isDown) {
+    if (input.isDown(map[buttons.left])) {
       sprite.body.angularVelocity = -cfg.speed.turn;
-    } else if (input.right.isDown) {
+    } else if (input.isDown(map[buttons.right])) {
       sprite.body.angularVelocity = cfg.speed.turn;
     }
 
-    if (input.up.isDown) {
+    if (input.isDown(map[buttons.forward])) {
       sprite.animations.play(cfg.update_anims.move);
       game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, cfg.speed.forward, sprite.body.velocity);
-    } else if (input.down.isDown) {
+    } else if (input.isDown(map[buttons.back])) {
       sprite.animations.play(cfg.update_anims.move);
       game.physics.arcade.velocityFromAngle(sprite.angle + FIXED_ROTATION, cfg.speed.backward, sprite.body.velocity);
     }
 
-    if (input.basic.isDown) {
+    if (input.isDown(map[buttons.basic])) {
       sprite.animations.play(cfg.update_anims.attack);
+      sprite.chomp();
+    }
+
+    if (input.isDown(map[buttons.special])) {
+      sprite.ulti();
     }
 
     // fast chomp
     // if (input.basic.isDown) { sprite.chomp(); }
     // slow chomp
-    input.basic.onDown.add(sprite.chomp, this);
-    input.special.onDown.add(sprite.ulti, this);
+    // input.basic.onDown.add(sprite.chomp, this);
+    // input.special.onDown.add(sprite.ulti, this);
 
   }
 
@@ -226,19 +223,25 @@ function Hero(character, playerNum, inputType) {
 // 
 
 function _heroShotCallback(_heroes, _bullets) {
-  if (_bullets.player == 1) {
-    fx.hurt1.play();
-  } else {
-    fx.hurt2.play();  
+  if (soundEnabled) {
+    if (_bullets.player == 1) {
+      fx.hurt1.play();
+    } else {
+      fx.hurt2.play();  
+    }
   }
 }
 
 function _heroKillCallback(_heroes, _bullets) {
   if (_bullets.player == 1) {
-    fx.hurt1.play();
+    if (soundEnabled) {
+      fx.hurt1.play();
+    }
     hero2.kill();
   } else {
-    fx.hurt2.play();
+    if (soundEnabled) {
+      fx.hurt2.play();
+    }
     hero1.kill();
   }
   _bullets.kill();
@@ -295,8 +298,28 @@ function _resurrectCreep() {
 // 
 
 // key bind helper
-function _addKey(key) {
-  return game.input.keyboard.addKey(Phaser.Keyboard[key]);
+function _getInput(inputType) {
+  return (inputType === 'gamepad') ? game.input.gamepad.pad1 : game.input.keyboard;
+}
+
+function _getMapping(inputType) {
+  return (inputType === 'gamepad') ? Phaser.Gamepad : Phaser.Keyboard;
+}
+
+function _getButtons(inputType, playerNum) {
+  var buttons;
+
+  if (inputType === 'gamepad') {
+    buttons = controls.gamepad;
+  } else {
+    if (playerNum === 1) {
+      buttons = controls.keyboard;
+    } else {
+      buttons = controls.keyboard2;
+    }
+  }
+
+  return buttons;
 }
 
 // random number helper
@@ -308,7 +331,7 @@ function _createBullets(img) {
   var bullets = game.add.group();
   bullets.enableBody = true;
   bullets.physicsBodyType = Phaser.Physics.ARCADE;
-  bullets.createMultiple(5, img);
+  bullets.createMultiple(1, img);
   bullets.setAll('anchor.x', 0.5);
   bullets.setAll('anchor.y', 0.5);
   bullets.setAll('checkWorldBounds', true);
@@ -365,7 +388,9 @@ function _restart () {
 // 
 
 function _showIntro () {
-  fx.letThemFight.play();
+  if (soundEnabled) {
+    fx.letThemFight.play();
+  }
   introText = game.add.text(game.world.centerX,game.world.centerY, "Let them fight!");
   introText.font = 'Roboto';
   introText.fill = 'cyan';
