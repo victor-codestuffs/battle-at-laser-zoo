@@ -39,6 +39,7 @@ var introText = null, stateText = null;
 var config, controls;
 var pad1;
 var soundEnabled = false;
+var debugEnabled = false;
 
 // CONSTANTS
 var SPECIAL_LIMIT = 3;
@@ -74,7 +75,7 @@ function create() {
   fx.explosion1 = game.add.audio('explosion1');
   fx.explosion2 = game.add.audio('explosion2');
   fx.letThemFight = game.add.audio('letthemfight');
-  
+
   stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart");
   stateText.font = 'Roboto';
   stateText.fill = 'cyan';
@@ -116,12 +117,14 @@ function update() {
 }
 
 function render() {
-  game.debug.body(hero1);
-  game.debug.spriteBounds(hero1.bullets);
-  game.debug.spriteBounds(hero1.ultimate);
-  game.debug.body(hero2);
-  game.debug.spriteBounds(hero2.bullets);
-  game.debug.spriteBounds(hero2.ultimate);
+  if (debugEnabled) {
+    game.debug.body(hero1);
+    game.debug.spriteBounds(hero1.bullets);
+    game.debug.spriteBounds(hero1.ultimate);
+    game.debug.body(hero2);
+    game.debug.spriteBounds(hero2.bullets);
+    game.debug.spriteBounds(hero2.ultimate);
+  }
 }
 
 // HERO MAKER
