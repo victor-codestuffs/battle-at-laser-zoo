@@ -1,9 +1,9 @@
-var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update, render:render  });
+var game = new Phaser.Game(1000, 575, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update, render:render  });
 
-WebFontConfig = {
-  active: function () { game.time.events.add(Phaser.Timer.SECOND, _showIntro, this); },
-  google: { families: ['Roboto'] }
-};
+// WebFontConfig = {
+//   active: function () { game.time.events.add(Phaser.Timer.SECOND, _showIntro, this); },
+//   google: { families: ['Roboto'] }
+// };
 
 function preload() {
   game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
@@ -50,6 +50,7 @@ var FIXED_ROTATION = 90; // fixes sprite angle
 function create() {
 
   bg = game.add.tileSprite(0, 0, 1280, 720, 'arena');
+  bg.scale.setTo(0.8, 0.8)
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -73,6 +74,14 @@ function create() {
   fx.explosion1 = game.add.audio('explosion1');
   fx.explosion2 = game.add.audio('explosion2');
   fx.letThemFight = game.add.audio('letthemfight');
+  
+  stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart");
+  stateText.font = 'Roboto';
+  stateText.fill = 'cyan';
+  stateText.fontSize = 60;
+  stateText.align = 'center';
+  stateText.anchor.setTo(0.5, 0.5);
+  stateText.visible = false;
 
 }
 
@@ -140,7 +149,7 @@ function Hero(character, playerNum, inputType) {
   sprite = game.add.sprite(cfg.sprite.x, cfg.sprite.y, cfg.sprite.key, cfg.sprite.frame)
   sprite.rotation = cfg.rotation;
   sprite.anchor.setTo(0.5, 0.5);
-  sprite.scale.setTo(0.75, 0.75);
+  sprite.scale.setTo(0.6, 0.6);
   sprite.special = 0;
   for (var i = 0; i < cfg.add_anims.length; i++) {
     anim = cfg.add_anims[i];
@@ -413,14 +422,6 @@ function _showIntro () {
   introText.fontSize = 60;
   introText.align = 'center';
   introText.anchor.setTo(0.5, 0.5);
-
-  stateText = game.add.text(game.world.centerX,game.world.centerY, "You're winner\nClick to restart");
-  stateText.font = 'Roboto';
-  stateText.fill = 'cyan';
-  stateText.fontSize = 60;
-  stateText.align = 'center';
-  stateText.anchor.setTo(0.5, 0.5);
-  stateText.visible = false;
 
   game.input.onDown.add(_removeIntro, this);
 
