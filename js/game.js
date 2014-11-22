@@ -19,6 +19,9 @@ function preload() {
   game.load.spritesheet('topcat', 'assets/sprite_topcat.png', 100, 100);
   game.load.spritesheet('topcat_bullets', 'assets/sprite_topcat_chomp.png', 30, 54);
   game.load.spritesheet('topcat_ulti', 'assets/sprite_topcat_ulti.png', 120, 100);
+  game.load.spritesheet('dog', 'assets/sprite_downwarddog.png', 100, 100);
+  game.load.spritesheet('dog_bullets', 'assets/sprite_downwarddog_chomp.png', 49, 49);
+  game.load.spritesheet('dog_ulti', 'assets/sprite_downwarddog_ulti.png', 47, 142);
   game.load.audio('laser1', 'assets/audio/laser-1.wav');
   game.load.audio('laser2', 'assets/audio/laser-2.wav');
   game.load.audio('hurt1', 'assets/audio/hurt-1.wav');
@@ -57,6 +60,7 @@ function create() {
   game.input.gamepad.start();
 
   // hero1 = new Hero('bearrage', 1, 'gamepad');
+  // hero1 = new Hero('downwarddog', 1, 'keyboard');
   hero1 = new Hero('bearrage', 1, 'keyboard');
   hero2 = new Hero('topcat', 2, 'keyboard');
   creeps = _createCreeps(CREEP_LIMIT);
@@ -121,6 +125,9 @@ function Hero(character, playerNum, inputType) {
       break;
     case "topcat":
       cfg = config.topcat;
+      break;
+    case "downwarddog":
+      cfg = config.downwarddog;
       break;
     default:
       cfg = config.chicken;

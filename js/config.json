@@ -106,5 +106,59 @@
       "ultimate" : "explosion2",
       "damaged" :  "hurt2"
     }
+  },
+  "downwarddog" : {
+    "sprite" : {
+      "x" : 650,
+      "y" : 650,
+      "key" : "dog",
+      "frame" : 0
+    },
+    "rotation" : 90,
+    "speed" : {
+      "turn" : 350,
+      "forward" : 525,
+      "backward" : -275
+    },
+    "update_anims" : {
+      "move" : "dog_run",
+      "attack" : "dog_chomp",
+      "idle" : "dog_idle"
+    },
+    "add_anims" : [
+      {
+        "key" : "dog_run",
+        "frames" : [1, 2, 3, 4, 5, 6, 7],
+        "fps" : 16,
+        "loop" : false
+      },
+      {
+        "key" : "dog_chomp",
+        "frames" : [9, 10, 11, 12, 13, 14, 15],
+        "fps" : 16,
+        "loop" : false
+      },
+      {
+        "key" : "dog_idle",
+        "frames" : [0],
+        "fps" : 1,
+        "loop" : true
+      }
+    ],
+    "basic" : {
+      "key" : "dog_bullets",
+      "lifespan" : 400,
+      "speed" : 700
+    },
+    "ultimate" : {
+      "key" : "dog_ulti",
+      "lifespan" : 1500,
+      "speed" : 500
+    },
+    "fx" : {
+      "basic" : "laser2",
+      "ultimate" : "explosion2",
+      "damaged" :  "hurt2"
+    }
   }
 }
