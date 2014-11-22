@@ -1,4 +1,4 @@
-var game = new Phaser.Game(600, 600, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update, render:render  });
+var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'phaser-stage', { preload: preload, create: create, update: update, render:render  });
 
 WebFontConfig = {
   active: function () { game.time.events.add(Phaser.Timer.SECOND, _showIntro, this); },
@@ -9,7 +9,7 @@ function preload() {
   game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
   game.load.json('config', 'js/config.json');
   game.load.json('controls', 'js/controls.json');
-  game.load.image('arena', 'assets/arena.png');
+  game.load.image('arena', 'assets/super_map.png');
   game.load.image('chicken', 'assets/chicken.png');
   game.load.image('fireball', 'assets/fireball.png');
   game.load.image('creep', 'assets/creep.png');
@@ -49,7 +49,7 @@ var FIXED_ROTATION = 90; // fixes sprite angle
 
 function create() {
 
-  bg = game.add.tileSprite(0, 0, 600, 600, 'arena');
+  bg = game.add.tileSprite(0, 0, 1280, 720, 'arena');
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
