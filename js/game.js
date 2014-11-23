@@ -12,7 +12,7 @@ function preload() {
   game.load.image('arena', 'assets/super_map.png');
   game.load.image('chicken', 'assets/chicken.png');
   game.load.image('fireball', 'assets/fireball.png');
-  game.load.image('creep', 'assets/creep.png');
+  game.load.spritesheet('creep', 'assets/creep.png', 20, 32);
   game.load.spritesheet('bear', 'assets/sprite_bearrage.png', 100, 100);
   game.load.spritesheet('bear_bullets', 'assets/sprite_bearrage_chomp.png', 60, 25);
   game.load.spritesheet('bear_ulti', 'assets/sprite_bearrage_ulti.png', 120, 92);
@@ -294,10 +294,12 @@ function _createCreeps(num) {
 
   for (var i = 0; i < num; i++) {
     var creep = creeps.create(_rnd(100, 700), _rnd(32, 700), 'creep');
+    creep.animations.add('wiggle', [0,1]);
+    creep.play('wiggle', 5, true);
     game.physics.enable(creep, Phaser.Physics.ARCADE);
-    creep.body.velocity.x = _rnd(-100, 100);
-    creep.body.velocity.y = _rnd(-100, 100);
-    creep.body.angularVelocity = _rnd(-100, 100);
+    creep.body.velocity.x = _rnd(-20, 20);
+    creep.body.velocity.y = _rnd(-20, 20);
+    creep.body.angularVelocity = _rnd(-50, 50);
   }
 
   creeps.setAll('body.collideWorldBounds', true);
